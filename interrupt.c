@@ -26,7 +26,7 @@ void Interrupts_init(void)
 void __interrupt(high_priority) HighISR()
 {
 	//add your ISR code here i.e. check the flag, do something (i.e. toggle an LED), clear the flag...
-    if (PIR2bits.C3IF) {                //triggers on the rising edge of comparator (when the LDR output goes from low to high)
+    if (PIR3bits.) {                //triggers on the rising edge of comparator (when the LDR output goes from low to high)
 
 }
 }
