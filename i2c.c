@@ -4,7 +4,7 @@
 void I2C_2_Master_Init(void)
 {
   //i2c config  
-  SSP2CON1bits.SSPM= 0b1000;    // i2c master mode
+  SSP2CON1bits.SSPM = 0b1000;    // i2c master mode
   SSP2CON1bits.SSPEN = 1;       //enable i2c
   SSP2ADD = (_XTAL_FREQ/(4*_I2C_CLOCK))-1; //Baud rate divider bits (in master mode)
   
