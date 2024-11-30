@@ -1,13 +1,38 @@
-/*
- * File:   main.c
- * Author: oluwa
- *
- * Created on November 25, 2024, 11:36 AM
- */
+
+ // CONFIG1L
+#pragma config FEXTOSC = HS     // External Oscillator mode Selection bits (HS (crystal oscillator) above 8 MHz; PFM set to high power)
+#pragma config RSTOSC = EXTOSC_4PLL// Power-up default value for COSC bits (EXTOSC with 4x PLL, with EXTOSC operating per FEXTOSC bits)
+
+// CONFIG3L
+#pragma config WDTCPS = WDTCPS_31// WDT Period Select bits (Divider ratio 1:65536; software control of WDTPS)
+#pragma config WDTE = OFF        // WDT operating mode (WDT enabled regardless of sleep)
+
+
+#define _XTAL_FREQ 64000000 //note intrinsic _delay function is 62.5ns at 64,000,000Hz  
 
 
 #include <xc.h>
+#include "color.h"
+#include "serial.h"
+#include "dc_motor.h"
+
+
 
 void main(void) {
-    return;
+    
+    color_click_init();
+    initUSART4();
+    while(1){    
+        flash_red();
+        __delay_ms(200);
+        sendCharSerial4(color_read_Red()); 
+        __delay_ms(200);
+        flash_green();
+        __delay_ms(200);
+        sendCharSerial4(color_read_Green());
+        __delay_ms(200);
+        flash_blue();
+        __delay_ms(200);
+        sendCharSerial4(color_read_Blue());                   
+    }
 }

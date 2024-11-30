@@ -16,6 +16,14 @@ void color_click_init(void)
 
     //set integration time
 	color_writetoaddr(0x01, 0xD5);
+    
+    //setup tricolor_led
+    TRISGbits.TRISG0 = 0;//red is AN 
+    LATGbits.LATG0 = 0;
+    TRISEbits.TRISE7 = 0;//green is CS 
+    LATEbits.LATE7 = 0;
+    TRISAbits.TRISA3 = 0;//blue is PWM
+    LATAbits.LATA3 = 0;
 }
 
 void color_writetoaddr(char address, char value){
@@ -80,4 +88,25 @@ unsigned int color_read_Blue(void)
 	tmp = tmp | (I2C_2_Master_Read(0)<<8); //read the Blue MSB (don't acknowledge as this is the last read)
 	I2C_2_Master_Stop();          //Stop condition
 	return tmp;
+}
+
+void flash_red(void)
+{
+    LATGbits.LATG0 = 1;
+    LATEbits.LATE7 = 0;
+    LATAbits.LATA3 = 0;
+}
+
+void flash_green(void)
+{
+    LATGbits.LATG0 = 0;
+    LATEbits.LATE7 = 1;
+    LATAbits.LATA3 = 0;
+}
+
+void flash_blue(void)
+{
+    LATGbits.LATG0 = 0;
+    LATEbits.LATE7 = 0;
+    LATAbits.LATA3 = 1;
 }

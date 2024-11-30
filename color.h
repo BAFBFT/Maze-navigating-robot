@@ -24,4 +24,26 @@ void color_writetoaddr(char address, char value);
  ***********************************************/
 unsigned int color_read_Red(void);
 
+/********************************************//**
+ *  Function to read the red channel
+ *	Returns a 16 bit ADC value representing colour intensity
+ ***********************************************/
+unsigned int color_read_Blue(void);
+
+/********************************************//**
+ *  Function to read the red channel
+ *	Returns a 16 bit ADC value representing colour intensity
+ ***********************************************/
+unsigned int color_read_Green(void);
+
+/********************************************//**
+ *  Function to read the red channel
+ *	Returns a 16 bit ADC value representing colour intensity
+ ***********************************************/
+unsigned int color_read_Clear(void);
+
+
+void flash_red(void);
+void flash_green(void);
+void flash_blue(void);
 #endif
