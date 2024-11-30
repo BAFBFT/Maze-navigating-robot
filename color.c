@@ -34,8 +34,8 @@ unsigned int color_read_Red(void)
 	I2C_2_Master_Write(0xA0 | 0x16);    //command (auto-increment protocol transaction) + start at RED low register
 	I2C_2_Master_RepStart();			// start a repeated transmission
 	I2C_2_Master_Write(0x52 | 0x01);     //7 bit address + Read (1) mode
-	tmp=I2C_2_Master_Read(1);			//read the Red LSB
-	tmp=tmp | (I2C_2_Master_Read(0)<<8); //read the Red MSB (don't acknowledge as this is the last read)
+	tmp = I2C_2_Master_Read(1);			//read the Red LSB
+	tmp = tmp | (I2C_2_Master_Read(0)<<8); //read the Red MSB (don't acknowledge as this is the last read)
 	I2C_2_Master_Stop();          //Stop condition
 	return tmp;
 }
