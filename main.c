@@ -23,16 +23,16 @@ void main(void) {
     color_click_init();
     initUSART4();
     while(1){    
-        flash_red();
-        __delay_ms(200);
-        sendCharSerial4(color_read_Red()); 
-        __delay_ms(200);
-        flash_green();
-        __delay_ms(200);
-        sendCharSerial4(color_read_Green());
-        __delay_ms(200);
-        flash_blue();
-        __delay_ms(200);
-        sendCharSerial4(color_read_Blue());                   
+//        flash_red();
+//        __delay_ms(200);
+//        sendCharSerial4(color_read_Red()); 
+//        __delay_ms(200);
+//        flash_green();
+//        __delay_ms(200);
+//        sendCharSerial4(color_read_Green());
+//        __delay_ms(200);
+//        flash_blue();
+//        __delay_ms(200);
+//        sendCharSerial4(color_read_Blue());                   
     }
 }

@@ -110,3 +110,16 @@ void flash_blue(void)
     LATEbits.LATE7 = 0;
     LATAbits.LATA3 = 1;
 }
+
+unsigned int read_color(void) {
+//reads the colours 10 times and adds the average of each to an array
+    unsigned int color_array[4] = {0, 0, 0, 0};
+    unsigned char samples = 10;                      //samples = number of times we time average
+    for (int i = 0; i < samples; i++) {
+        color_array[0] += color_read_Red()/10;
+        color_array[1] += color_read_Green()/10;
+        color_array[2] += color_read_Blue()/10;
+        color_array[3] += color_read_Clear()/10;
+    }
+    return color_array;
+}
