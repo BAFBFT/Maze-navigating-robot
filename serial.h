@@ -12,5 +12,5 @@
 void initUSART4(void);
 void sendCharSerial4(char charToSend);
 void sendStringSerial4(char *string);
-
+void sendUnsignedIntSerial4(unsigned int value);
 #endif

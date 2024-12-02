@@ -1,4 +1,5 @@
 #include <xc.h>
+#include <stdio.h>
 #include "serial.h"
 
 void initUSART4(void) {
@@ -10,7 +11,7 @@ void initUSART4(void) {
     
     BAUD4CONbits.BRG16 = 0; 	//set baud rate scaling
     TX4STAbits.BRGH = 0; 		//high baud rate select bit
-    SP4BRGL = 103; 			//set baud rate to 103 = 9600bps
+    SP4BRGL = 52; 			//set baud rate to  103 = 9600bps, 52 = 19200bps
     SP4BRGH = 0;			//not used
 
     RC4STAbits.CREN = 1; 		//enable continuos reception
@@ -31,4 +32,11 @@ void sendStringSerial4(char *string){
     sendCharSerial4(*string); //Send out the current byte pointed to and increment the pointer
     string++;
     } 	
+}
+
+void sendUnsignedIntSerial4(unsigned int value) {
+    char buffer[7];  // Buffer to hold the string representation (max 5 digits + null terminator)
+    sprintf(buffer, "%u", value);  // Convert unsigned int to decimal string
+    sendStringSerial4(buffer);  // Send the resulting string
+    sendStringSerial4(" ");
 }
