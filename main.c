@@ -59,48 +59,24 @@ void main(void) {
     
     //initialise buttons
     TRISFbits.TRISF2 = 1;
-    ANSELFbits.ANSELF2 =0;
+    ANSELFbits.ANSELF2 = 0;
     TRISFbits.TRISF3 = 1;
-    ANSELFbits.ANSELF3 =0;
+    ANSELFbits.ANSELF3 = 0;
     
     color_click_init();
     initUSART4();
     
-    char go = 0;
+
+//    char go = 0;
     while(1){
-        
-        if (!PORTFbits.RF2){ //detect button press
-            go = 1; }
-        
-        if (go) {
-            fullSpeedAhead(&motorL, &motorR);
-        
-            if ((color_read_Clear() < 35)){
-                stop(&motorL, &motorR);
-                
-                for (char i=0; i <10; i++){
-                flash_red();
-                //sendUnsignedIntSerial4(color_read_Red());
-                __delay_ms(100);
+        RGBC color = MeasureRGBC();
 
-                flash_green();
-                //sendUnsignedIntSerial4(color_read_Green());
-                __delay_ms(100);
-
-                flash_blue();
-                //sendUnsignedIntSerial4(color_read_Blue());
-                __delay_ms(100);
-                }
-        
-                //sendUnsignedIntSerial4(color_read_Clear());
-                turnRight(&motorL, &motorR);
-                
-                //turn off LEDs
-                LATGbits.LATG0 = 0;
-                LATEbits.LATE7 = 0;
-                LATAbits.LATA3 = 0;
-            
-            }
-        }              
+        //__delay_ms(100);
+        sendUnsignedIntSerial4(color.R);
+        //__delay_ms(100);
+        sendUnsignedIntSerial4(color.G);
+        //__delay_ms(100);
+        sendUnsignedIntSerial4(color.B);
+        sendUnsignedIntSerial4(color.C);
     }
 }
