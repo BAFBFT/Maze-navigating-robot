@@ -1,0 +1,21 @@
+set up timer
+set up interrupt
+
+process:
+
+buggy runs into wall ==> clear goes down ==> action happens ==> begin timer as soon as rover starts moving ==> stop timer when clear goes dark again
+
+therefore, clear interrupt on falling edge (when clear < AILT) oki
+
+do we need something to do about timer interrupts? surely not
+
+The MSSPx module has seven registers for I2C operation.
+These are:
+• MSSP Status Register (SSPxSTAT)
+• MSSP Control Register 1 (SSPxCON1)
+• MSSP Control Register 2 (SSPxCON2)
+• MSSP Control Register 3 (SSPxCON3)
+• Serial Receive/Transmit Buffer Register (SSPxBUF)
+• MSSP Address Register (SSPxADD)
+• I2C Slave Address Mask Register (SSPxMSK)
+• MSSP Shift Register (SSPSR) – not directly accessible

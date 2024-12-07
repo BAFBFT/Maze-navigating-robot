@@ -13,6 +13,8 @@
 #define _XTAL_FREQ 64000000
 
 void Interrupts_init(void);
+void clear_interrupt_init(void);
+void TCS3471_ISR();
 void __interrupt(high_priority) HighISR();
 
 #endif
