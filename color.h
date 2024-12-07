@@ -2,9 +2,12 @@
 #define _color_H
 
 #include <xc.h>
+#include <stdint.h>
 
 #define _XTAL_FREQ 64000000 //note intrinsic _delay function is 62.5ns at 64,000,000Hz  
 
+#define SCALE 1024  // Scaling factor to preserve precision
+ 
 
 /********************************************//**
  *  Function to initialise the colour click module using I2C
@@ -52,4 +55,23 @@ unsigned int read_color(void);
 void flash_red(void);
 void flash_green(void);
 void flash_blue(void);
+void turn_off_LED(void);
+
+typedef struct RGBC{
+    unsigned long R; // Red
+    unsigned long G; // Green
+    unsigned long B; // Blue
+    unsigned long C; // Clear
+} RGBC;
+
+typedef struct HSV{
+    unsigned int H; // Hue
+    unsigned int S; // Saturation
+    unsigned int V; // Value
+} HSV;
+
+
+const char* classifyColor(uint16_t R, uint16_t G, uint16_t B, uint16_t C);
+HSV RGBtoHSV(RGBC rgbc);
+RGBC MeasureRGBC(void);
 #endif
