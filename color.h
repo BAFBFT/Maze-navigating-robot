@@ -58,10 +58,10 @@ void flash_blue(void);
 void turn_off_LED(void);
 
 typedef struct RGBC{
-    unsigned long R; // Red
-    unsigned long G; // Green
-    unsigned long B; // Blue
-    unsigned long C; // Clear
+    float R; // Red
+    float G; // Green
+    float B; // Blue
+    float C; // Clear
 } RGBC;
 
 typedef struct HSV{
@@ -70,8 +70,10 @@ typedef struct HSV{
     unsigned int V; // Value
 } HSV;
 
-
-const char* classifyColor(uint16_t R, uint16_t G, uint16_t B, uint16_t C);
-HSV RGBtoHSV(RGBC rgbc);
+//const char* classify_color(RGBC color);
+//const char* classifyColor(uint16_t R, uint16_t G, uint16_t B, uint16_t C);
+//HSV RGBtoHSV(RGBC rgbc);
+HSV ReadHSV(void);
 RGBC MeasureRGBC(void);
+const char* ClassifyColor(HSV hsv);
 #endif

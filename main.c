@@ -69,15 +69,52 @@ void main(void) {
     
     color_click_init();
     initUSART4();
+    char go = 0;
     while(1){
-        RGBC color = MeasureRGBC();
+//        RGBC color_1 = MeasureRGBC();
+        HSV color = ReadHSV();
 
-        //__delay_ms(100);
-        sendUnsignedIntSerial4(color.R);
-        //__delay_ms(100);
-        sendUnsignedIntSerial4(color.G);
-        //__delay_ms(100);
-        sendUnsignedIntSerial4(color.B);
-        sendUnsignedIntSerial4(color.C);
+//        sendStringSerial4(classify_color(MeasureRGBC()));
+          // 
+
+//        sendUnsignedIntSerial4(color_1.R);
+//        sendUnsignedIntSerial4(color_1.G);
+//        sendUnsignedIntSerial4(color_1.B);
+//        sendUnsignedIntSerial4(color_1.C);
+        __delay_ms(300);
+        sendUnsignedIntSerial4(color.H);
+        sendUnsignedIntSerial4(color.S);
+        sendStringSerial4(ClassifyColor(color));
+        sendStringSerial4(" ");
+
+     
+        
     }
+
+        
+//        __delay_ms(200);
+//        sendUnsignedIntSerial4(color_read_Clear());
+        
+//         if (!PORTFbits.RF2){ //detect button press
+//            go = 1; }
+//        
+//        if (go) {
+//            fullSpeedAhead(&motorL, &motorR);
+//        
+//            if ((color_read_Clear() < 40)){
+//                stop(&motorL, &motorR);  
+//                RGBC color = MeasureRGBC();
+//                
+//                
+//                
+//                if (color.R > color.G){
+//                    reverse(&motorL, &motorR);
+//                    turnRight(&motorL, &motorR);
+//                } else {
+//                    reverse(&motorL, &motorR);
+//                    turnLeft(&motorL, &motorR);
+//                }
+//            }
+//        }              
+//    }
 }
