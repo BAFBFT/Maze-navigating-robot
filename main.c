@@ -15,13 +15,17 @@
 #include "color.h"
 #include "serial.h"
 #include "dc_motor.h"
+#include "interrupt.h"
 
 
 
 void main(void) {
     initDCmotorsPWM(199);
-	//don't forget TRIS for your output!
+    Interrupts_init();
+    clear_interrupt_init();
     
+	//don't forget TRIS for your output!
+    TRISDbits.TRISD7 = 0; //for testing the clear interrupt
     // Define motors
     DC_motor motorL = {
         .power = 0,
@@ -65,8 +69,6 @@ void main(void) {
     
     color_click_init();
     initUSART4();
-    
-
     char go = 0;
     while(1){
 //        RGBC color_1 = MeasureRGBC();
