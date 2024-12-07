@@ -1,5 +1,6 @@
 #include <xc.h>
 #include "dc_motor.h"
+#include "color.h"
 
 // function initialise T2 and CCP for DC motor control
 void initDCmotorsPWM(int PWMperiod){
@@ -110,7 +111,7 @@ void turnLeft(DC_motor *mL, DC_motor *mR)
     setMotorPWM(mL); //send to controller
     setMotorPWM(mR);
     
-    __delay_ms(turnTime); //allow time to turn
+    __delay_ms(turnTimeleft); //allow time to turn
     stop(mL, mR); //then stop
     LATFbits.LATF0 = 0; //stop signaling
 }
@@ -127,7 +128,7 @@ void turnRight(DC_motor *mL, DC_motor *mR)
     setMotorPWM(mL); //send to controller
     setMotorPWM(mR);
     
-    __delay_ms(turnTime); //allow time to turn
+    __delay_ms(turnTimeright); //allow time to turn
     stop(mL, mR); //then stop
     LATEbits.LATE5 = 0; //stop signalling
 }
@@ -135,9 +136,9 @@ void turnRight(DC_motor *mL, DC_motor *mR)
 //function to make the robot go straight
 void fullSpeedAhead(DC_motor *mL, DC_motor *mR)
 {
-    mL->power=25; //set Left wheel to go 50%
+    mL->power=100; //set Left wheel to go 50%
     mL->direction=1; //set Left wheel direction to forward
-    mR->power=25; //set Right wheel to go 50%
+    mR->power=100; //set Right wheel to go 50%
     mR->direction=1; //set Right wheel direction to forward
     
     setMotorPWM(mL); //send to controller
@@ -157,7 +158,7 @@ void reverse(DC_motor *mL, DC_motor *mR)
     setMotorPWM(mL); //send to controller
     setMotorPWM(mR);
     
-    __delay_ms(100);
+    __delay_ms(250);
     stop(mL, mR); //then stop
     __delay_ms(100);
 }

@@ -64,10 +64,6 @@ typedef struct HSV{
     unsigned int V; // Value
 } HSV;
 
-//const char* classify_color(RGBC color);
-//const char* classifyColor(uint16_t R, uint16_t G, uint16_t B, uint16_t C);
-//HSV RGBtoHSV(RGBC rgbc);
 HSV ReadHSV(void);
-RGBC MeasureRGBC(void);
-const char* ClassifyColor(HSV hsv);
+char ClassifyColor(HSV hsv);
 #endif

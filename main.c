@@ -66,11 +66,11 @@ void main(void) {
     color_click_init();
     initUSART4();
     
-
+    
     char go = 0;
     while(1){
 //        RGBC color_1 = MeasureRGBC();
-        HSV color = ReadHSV();
+//        HSV color = ReadHSV();
 
 //        sendStringSerial4(classify_color(MeasureRGBC()));
           // 
@@ -79,40 +79,40 @@ void main(void) {
 //        sendUnsignedIntSerial4(color_1.G);
 //        sendUnsignedIntSerial4(color_1.B);
 //        sendUnsignedIntSerial4(color_1.C);
-        __delay_ms(300);
-        sendUnsignedIntSerial4(color.H);
-        sendUnsignedIntSerial4(color.S);
-        sendStringSerial4(ClassifyColor(color));
-        sendStringSerial4(" ");
-
-     
         
+        
+        if (!PORTFbits.RF2){ //detect button press
+            go = 1; }        
+        if (go) {
+
+            fullSpeedAhead(&motorL, &motorR);
+        
+            if ((color_read_Clear() < 100)){
+                char j = 0;
+                while (j < 5) {
+                    fullSpeedAhead(&motorL, &motorR);
+                    __delay_ms(150);
+                    j++;
+                }
+                stop(&motorL, &motorR);  
+                HSV color = ReadHSV();
+                
+                
+                
+                if (ClassifyColor(color) == 1){
+                    reverse(&motorL, &motorR);
+                    turnRight(&motorL, &motorR);
+                } else if (ClassifyColor(color) == 7) {
+                    reverse(&motorL, &motorR);
+                    turnLeft(&motorL, &motorR);        
+                } else if (ClassifyColor(color) == 8){
+                    reverse(&motorL, &motorR);
+                    for (char i = 0; i < 2; i++){
+                        turnLeft(&motorL, &motorR);
+                        __delay_ms(800);
+                    }
+                }
+            }
+        }              
     }
-
-        
-//        __delay_ms(200);
-//        sendUnsignedIntSerial4(color_read_Clear());
-        
-//         if (!PORTFbits.RF2){ //detect button press
-//            go = 1; }
-//        
-//        if (go) {
-//            fullSpeedAhead(&motorL, &motorR);
-//        
-//            if ((color_read_Clear() < 40)){
-//                stop(&motorL, &motorR);  
-//                RGBC color = MeasureRGBC();
-//                
-//                
-//                
-//                if (color.R > color.G){
-//                    reverse(&motorL, &motorR);
-//                    turnRight(&motorL, &motorR);
-//                } else {
-//                    reverse(&motorL, &motorR);
-//                    turnLeft(&motorL, &motorR);
-//                }
-//            }
-//        }              
-//    }
 }
