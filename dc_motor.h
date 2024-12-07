@@ -5,7 +5,7 @@
 
 #define _XTAL_FREQ 64000000
 
-# define turnTime 270 // value determined from calibration 
+# define turnTime 400 // value determined from calibration 
 
 typedef struct DC_motor { //definition of DC_motor structure
     char power;         //motor power, out of 100
@@ -23,5 +23,6 @@ void stop(DC_motor *mL, DC_motor *mR);
 void turnLeft(DC_motor *mL, DC_motor *mR);
 void turnRight(DC_motor *mL, DC_motor *mR);
 void fullSpeedAhead(DC_motor *mL, DC_motor *mR);
+void reverse(DC_motor *mL, DC_motor *mR);
 
 #endif

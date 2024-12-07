@@ -135,12 +135,29 @@ void turnRight(DC_motor *mL, DC_motor *mR)
 //function to make the robot go straight
 void fullSpeedAhead(DC_motor *mL, DC_motor *mR)
 {
-    mL->power=50; //set Left wheel to go 50%
+    mL->power=25; //set Left wheel to go 50%
     mL->direction=1; //set Left wheel direction to forward
-    mR->power=50; //set Right wheel to go 50%
+    mR->power=25; //set Right wheel to go 50%
     mR->direction=1; //set Right wheel direction to forward
     
     setMotorPWM(mL); //send to controller
     setMotorPWM(mR);
 }
 
+//function to make the robot go 1 box in reverse
+void reverse(DC_motor *mL, DC_motor *mR)
+{
+    mL->power= 50; //set Left wheel to go power set in .h
+    mL->direction= 0; //set Left wheel direction to forward
+    mL->brakemode = 1; //cause breaking effect
+    mR->power= 50; //set Right wheel to go power set in .h
+    mR->direction= 0; //set Left wheel direction to forward
+    mR->brakemode = 1; //cause breaking effect
+    
+    setMotorPWM(mL); //send to controller
+    setMotorPWM(mR);
+    
+    __delay_ms(100);
+    stop(mL, mR); //then stop
+    __delay_ms(100);
+}
