@@ -1,6 +1,7 @@
 #include <xc.h>
 #include "i2c.h"
 
+
 void I2C_2_Master_Init(void)
 {
   //i2c config  
@@ -47,7 +48,26 @@ void I2C_2_Master_Write(unsigned char data_byte)
   I2C_2_Master_Idle();
   SSP2BUF = data_byte;         //Write data to SSPBUF
 }
+void I2C_Write_Register(unsigned char reg, unsigned char data) {
+    char TCS_address = 0x29;
+    I2C_2_Master_Start();
+    I2C_2_Master_Write((TCS_address << 1) | 0);   //device address and write bit
+    I2C_2_Master_Write(reg);                    //register address
+    I2C_2_Master_Write(data);                   //actual data to be written to SLAVE
+    I2C_2_Master_Stop();
+}
 
+unsigned char I2C_Read_Register(unsigned char reg) {
+    char TCS_address = 0x29;
+    I2C_2_Master_Start();
+    I2C_2_Master_Write((TCS_address << 1) | 0);   //device address and write bit
+    I2C_2_Master_Write(reg);                    //register address of data to be read
+    I2C_2_Master_RepStart();
+    I2C_2_Master_Write((TCS_address << 1) | 1);
+    unsigned char data = I2C_2_Master_Read(0);
+    I2C_2_Master_Stop();
+    return data;
+}
 unsigned char I2C_2_Master_Read(unsigned char ack)
 {
   unsigned char tmp;

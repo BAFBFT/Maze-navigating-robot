@@ -42,5 +42,8 @@ void I2C_2_Master_Write(unsigned char data_byte);
  ***********************************************/
 unsigned char I2C_2_Master_Read(unsigned char ack);
 
+void I2C_Write_Register(unsigned char reg, unsigned char data);
+unsigned char I2C_Read_Register(unsigned char reg);
+
 
 #endif
