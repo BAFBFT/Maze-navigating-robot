@@ -61,6 +61,41 @@ void initDCmotorsPWM(int PWMperiod){
     CCP4CONbits.EN=1; //turn on
 }
 
+void initBuggyLights(void)
+{
+    //turns headlights on
+    TRISDbits.TRISD3 = 0;
+    LATDbits.LATD3 = 0;
+    
+    //initialise left turn signals
+    TRISFbits.TRISF0 = 0;
+    LATFbits.LATF0 = 0;
+    
+    //initialise right turn signals
+    TRISEbits.TRISE5 = 0;
+    LATEbits.LATE5 = 0;
+    
+    //initialise brake turn signals
+    TRISFbits.TRISF7 = 0;
+    LATFbits.LATF7 = 0;
+    
+    //initialise LED D7
+    TRISDbits.TRISD7 = 0;
+    LATDbits.LATD7= 0;
+    
+    //initialise LED D7
+    TRISHbits.TRISH3 = 0;
+    LATHbits.LATH3 = 0;
+}
+
+void initButtons(void)
+{
+    //initialise buttons
+    TRISFbits.TRISF2 = 1;
+    ANSELFbits.ANSELF2 = 0;
+    TRISFbits.TRISF3 = 1;
+    ANSELFbits.ANSELF3 = 0;
+}
 // function to set CCP PWM output from the values in the motor structure
 void setMotorPWM(DC_motor *m)
 {
@@ -82,6 +117,27 @@ void setMotorPWM(DC_motor *m)
         *(m->posDutyHighByte)=negDuty;  //do it the other way around to change direction
         *(m->negDutyHighByte)=posDuty;
     }
+}
+
+//function to initialise motor struct
+void motorStruct(DC_motor *motorL, DC_motor *motorR)
+{
+    initDCmotorsPWM(199);
+    // Initialise motorL
+    motorL->power = 0;
+    motorL->direction = 1;
+    motorL->brakemode = 1;
+    motorL->posDutyHighByte = (unsigned char *)(&CCPR1H);
+    motorL->negDutyHighByte = (unsigned char *)(&CCPR2H);
+    motorL->PWMperiod = 199;
+
+    // Initialise motorR
+    motorR->power = 0;
+    motorR->direction = 1;
+    motorR->brakemode = 1;
+    motorR->posDutyHighByte = (unsigned char *)(&CCPR3H);
+    motorR->negDutyHighByte = (unsigned char *)(&CCPR4H);
+    motorR->PWMperiod = 199;
 }
 
 //function to stop the robot gradually 
@@ -136,17 +192,17 @@ void turnRight(DC_motor *mL, DC_motor *mR)
 //function to make the robot go straight
 void fullSpeedAhead(DC_motor *mL, DC_motor *mR)
 {
-    mL->power=100; //set Left wheel to go 50%
+    mL->power=30; //set Left wheel to go 50%
     mL->direction=1; //set Left wheel direction to forward
-    mR->power=100; //set Right wheel to go 50%
+    mR->power=30; //set Right wheel to go 50%
     mR->direction=1; //set Right wheel direction to forward
     
     setMotorPWM(mL); //send to controller
     setMotorPWM(mR);
 }
 
-//function to make the robot go 1 box in reverse
-void reverse(DC_motor *mL, DC_motor *mR)
+//function to make the robot go a short distance in reverse
+void shortReverse(DC_motor *mL, DC_motor *mR)
 {
     mL->power= 50; //set Left wheel to go power set in .h
     mL->direction= 0; //set Left wheel direction to forward
@@ -161,4 +217,101 @@ void reverse(DC_motor *mL, DC_motor *mR)
     __delay_ms(250);
     stop(mL, mR); //then stop
     __delay_ms(100);
+}
+
+//function to make the robot go 1 box in reverse
+void longReverse(DC_motor *mL, DC_motor *mR)
+{
+    mL->power= 50; //set Left wheel to go power set in .h
+    mL->direction= 0; //set Left wheel direction to forward
+    mL->brakemode = 1; //cause breaking effect
+    mR->power= 50; //set Right wheel to go power set in .h
+    mR->direction= 0; //set Left wheel direction to forward
+    mR->brakemode = 1; //cause breaking effect
+    
+    setMotorPWM(mL); //send to controller
+    setMotorPWM(mR);
+    
+    __delay_ms(reverseTime);
+    stop(mL, mR); //then stop
+    __delay_ms(100);
+}
+
+// function to make the  robot turn left 135
+void turnLeft135(DC_motor *mL, DC_motor *mR)
+{
+    LATEbits.LATE5 = 1; //signal right
+    mL->power=50; //set Left wheel to go 50%
+    mL->direction=0; //set Left wheel direction to forward
+    mR->power=50; //set Right wheel to go 50%
+    mR->direction=1; //set Right wheel direction to reverse
+    
+    setMotorPWM(mL); //send to controller
+    setMotorPWM(mR);
+    
+    __delay_ms(turnTimeLeft135); //allow time to turn
+    stop(mL, mR); //then stop
+    LATEbits.LATE5 = 0; //stop signalling
+}
+
+// function to make the  robot turn right 135
+void turnRight135(DC_motor *mL, DC_motor *mR)
+{
+    LATEbits.LATE5 = 1; //signal right
+    mL->power=50; //set Left wheel to go 50%
+    mL->direction=1; //set Left wheel direction to forward
+    mR->power=50; //set Right wheel to go 50%
+    mR->direction=0; //set Right wheel direction to reverse
+    
+    setMotorPWM(mL); //send to controller
+    setMotorPWM(mR);
+    
+    __delay_ms(turnTimeRight135); //allow time to turn
+    stop(mL, mR); //then stop
+    LATEbits.LATE5 = 0; //stop signalling
+}
+
+// function to make the robot realign with the wall
+void wallAlign(DC_motor *mL, DC_motor *mR){
+    char j = 0;
+    while (j < 5) {
+        fullSpeedAhead(mL, mR);
+        __delay_ms(150);
+        j++;
+    }
+}
+
+//Function to command motors based on color
+void CommandBuggy(DC_motor *motorL, DC_motor *motorR, char color) {
+    if (color == 1) {
+        shortReverse(motorL, motorR);
+        turnRight(motorL, motorR);
+    } else if (color == 2) {
+        shortReverse(motorL, motorR);
+        turnRight135(motorL, motorR);
+    } else if (color == 3) {
+        longReverse(motorL, motorR);
+        turnRight(motorL, motorR);
+    } else if (color == 4) {
+        longReverse(motorL, motorR);
+        turnLeft(motorL, motorR);
+    } else if (color == 5) {
+        longReverse(motorL, motorR);
+        // white, go home
+    } else if (color == 6) {
+        shortReverse(motorL, motorR);
+        turnLeft135(motorL, motorR);
+    } else if (color == 7) {
+        shortReverse(motorL, motorR);
+        turnLeft(motorL, motorR);
+    } else if (color == 8) {
+        shortReverse(motorL, motorR);
+        for (char i = 0; i < 2; i++) {
+            turnLeft(motorL, motorR);
+            __delay_ms(500); // Wait 500 ms between turns
+        }
+    } else {
+        // Default action if no valid color classification
+        stop(motorL, motorR); // Define stopMotors to halt both motors
+    }
 }
