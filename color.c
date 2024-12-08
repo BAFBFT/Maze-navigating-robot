@@ -122,157 +122,6 @@ void turn_off_LED(void)
 }
 
 
-RGBC MeasureRGBC(void) {
-    RGBC rgbc;
-
-    // Measure Red Channel
-    float totalR = 0.0f;
-    for (char i = 0; i < 10; i++) {
-        flash_red();
-        __delay_ms(50);
-        totalR += (float)color_read_Red();
-    }
-    float avgR = totalR / 10.0f;
-    turn_off_LED();
-
-    // Measure Green Channel
-    float totalG = 0.0f;
-    for (char i = 0; i < 10; i++) {
-        flash_green();
-        __delay_ms(50);
-        totalG += (float)color_read_Green();
-    }
-    float avgG = totalG / 10.0f;
-    turn_off_LED();
-
-    // Measure Blue Channel
-    float totalB = 0.0f;
-    for (char i = 0; i < 10; i++) {
-        flash_blue();
-        __delay_ms(50);
-        totalB += (float)color_read_Blue();
-    }
-    float avgB = totalB / 10.0f;
-    turn_off_LED();
-
-    // Measure Clear Channel
-    float totalC = 0.0f;
-    for (char i = 0; i < 10; i++) {
-        __delay_ms(50);
-        totalC += (float)color_read_Clear();
-    }
-    float avgC = totalC / 10.0f;
-
-    // Normalize RGB values by dividing by the clear channel
-    rgbc.R = avgR / avgC;
-    rgbc.G = avgG / avgC;
-    rgbc.B = avgB / avgC;
-    rgbc.C = avgC;
-
-    return rgbc;
-}
-
-       
-//const char* classify_color(RGBC color) {
-//    float total = color.R + color.G + color.B;
-//    float ratio_r = color.R / total;
-//    float ratio_g = color.G / total;
-//    float ratio_b = color.B / total;
-//
-//    if (ratio_r > 0.75) {
-//        if (ratio_g > 0.2) {
-//            return "YELLOW";
-//        } else {
-//            if (ratio_b > 0.07) {
-//                return "ORANGE";
-//            } else {
-//                return "RED";
-//            }
-//        }
-//    } else {
-//        if (ratio_g > 0.45) {
-//            return "LIGHT BLUE";
-//        } else {
-//            if (ratio_b > 0.15) {
-//                return "PINK";
-//            } else {
-//                return "WHITE";
-//            }
-//        }
-//    }
-//}
-//               
-//HSV RGBtoHSV(RGBC rgbc) {
-//    
-//    //Obtain readings from sensor
-//    unsigned int R = rgbc.R;
-//    unsigned int G = rgbc.G;
-//    unsigned int B = rgbc.B;
-//    unsigned int C = rgbc.C;
-//
-//    // Find max and min
-//    unsigned int max, min, delta;
-//
-//    // Determine the maximum value
-//    if (R > G) {
-//        if (R > B) {
-//            max = R;  // R_norm is the largest
-//        } else {
-//            max = B;  // B_norm is larger than R_norm
-//        }
-//    } else {
-//        if (G > B) {
-//            max = G;  // G_norm is the largest
-//        } else {
-//            max = B;  // B_norm is larger than G_norm
-//        }
-//    }
-//
-//    // Determine the minimum value
-//    if (R < G) {
-//        if (R < B) {
-//            min = R;  // R_norm is the smallest
-//        } else {
-//            min = B;  // B_norm is smaller than R_norm
-//        }
-//    } else {
-//        if (G < B) {
-//            min = G;  // G_norm is the smallest
-//        } else {
-//            min = B;  // B_norm is smaller than G_norm
-//        }
-//    }
-//
-//    // Calculate delta
-//    delta = max - min;
-//    
-//    //initialise HSV struct
-//    HSV hsv;
-//    
-//    // Calculate Value (V)
-//    hsv.V = (max * 100) / SCALE;
-//
-//    // Calculate Saturation (S)    
-//    if (max == 0){
-//        hsv.S = 0; // 0 saturation when value is 0
-//    } else {
-//        hsv.S = (delta * 100) / max;
-//    }
-//
-//    // Calculate Hue (H)
-//    if (delta == 0) {
-//        hsv.H = 0; // Undefined hue
-//    } else if (max == R) {
-//        hsv.H = ((60 * (G - B) / delta) + 360) % 360;
-//    } else if (max == G) {
-//        hsv.H = ((60 * (B - R) / delta) + 120) % 360;
-//    } else {
-//        hsv.H = ((60 * (R - G) / delta) + 240) % 360;
-//    }
-//    
-//    return hsv;
-//}
-
 HSV ReadHSV(void) {
     const double SCALE_FACTOR = 100.0;
     
@@ -350,32 +199,32 @@ HSV ReadHSV(void) {
 }
 
 
-const char* ClassifyColor(HSV hsv) {
+char ClassifyColor(HSV hsv) {
     
-    // Calculate S/H ratio, scaling S by 100
+    // Calculate S/H ratio, scaling S by 1000
     double S_H_ratio = (hsv.H != 0) ? ((double)hsv.S * 1000) / hsv.H : 0;
 
     // Color classification using if-else statements with continuous thresholds
-    if (S_H_ratio > 23500) {
-        return "RED";
-    } else if (S_H_ratio > 9000 && S_H_ratio <= 23500) {
-        return "ORANGE";
-    } else if (S_H_ratio > 2900 && S_H_ratio <= 9000 && hsv.S > 85) { // Saturation to handle overlap with pink
-        return "YELLOW";
+    if (S_H_ratio > 20000) {
+        return 1; //RED
+    } else if (S_H_ratio > 9000 && S_H_ratio <= 20000) {
+        return 2; // ORANGE
+    } else if (S_H_ratio > 2900 && S_H_ratio <= 9000 && hsv.S > 85) { // Saturation to handle overlap with PINK
+        return 3; //YELLOW
     } else if (S_H_ratio > 900 && S_H_ratio <= 3200) {
-        // Nested if statement for PINK, WHITE, and LIGHT BLUE
+        // Nested if statement for PINK, WHITE, and LIGHT BLUE 
         if (hsv.H < 35) {
-            return "PINK";
+            return 4; // PINK
         } else if (hsv.H >= 35 && hsv.H <= 45) {
-            return "WHITE";
+            return 5; // WHITE
         } else {
-            return "LIGHT BLUE";
+            return 6; //LIGHT BLUE
         }
     } else if (S_H_ratio > 800 && S_H_ratio <= 900) {
-        return "GREEN";
+        return 7; // GREEN
     } else if (S_H_ratio <= 800) {
-        return "BLUE";
+        return 8; // BLUE
     } else {
-        return "UNKNOWN";
+        return 0; // LOST (unrecognised color)
     }
 }
