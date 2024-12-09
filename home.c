@@ -1,7 +1,6 @@
 #include <xc.h>
 #include "home.h"
 #include <stdio.h>
-#include <stdbool.h>
 
 //function to initialise motor struct
 void initialiseStack(Stack *timeStack, Stack *commandStack)
@@ -44,7 +43,7 @@ void push(Stack *stack, int value) {
 }
 
 // Function to flip the color command for return home
-char flipColor(char color){
+char flipCommand(char color){
     
     if (color == 1) {
         return 7;

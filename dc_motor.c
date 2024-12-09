@@ -107,6 +107,12 @@ void setCalibrationLED(void){
     LATHbits.LATH3 = 1;
 }
 
+// function to turn off LEDs
+void turnOffLEDs(void) {
+    LATHbits.LATH3 = 0;
+    LATDbits.LATD7 = 0;
+}
+
 // function to set CCP PWM output from the values in the motor structure
 void setMotorPWM(DC_motor *m)
 {
@@ -309,8 +315,12 @@ void CommandBuggy(DC_motor *motorL, DC_motor *motorR, char color) {
         longReverse(motorL, motorR);
         turnLeft(motorL, motorR);
     } else if (color == 5) {
-        longReverse(motorL, motorR);
-        // white, go home
+        shortReverse(motorL, motorR);
+        for (char i = 0; i < 2; i++) {
+            turnLeft(motorL, motorR);
+            __delay_ms(500); // Wait 500 ms between turns
+        }
+        // white, turn 180, go home
     } else if (color == 6) {
         shortReverse(motorL, motorR);
         turnLeft135(motorL, motorR);

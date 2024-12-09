@@ -20,38 +20,76 @@
 
 
 
-void main(void) {   
+void main(void) {
     Interrupts_init();
 
-// Declare motor structs
+    // Declare motor structs
     DC_motor motorL, motorR;
     motorStruct(&motorL, &motorR);
-//Other initialisations    
+
+    // Other initializations    
     initBuggyLights();
     initButtons();   
     color_click_init();
     initUSART4();
-// Declare HSV struct
+
+    // Declare HSV struct
     HSV color;
- // Declare timeStack and commandStack structs
+
+    // Declare timeStack and commandStack structs
     Stack timeStack, commandStack;
     initialiseStack(&timeStack, &commandStack);
-    
+
     char go = 0;
-    while(1){      
-        if (!PORTFbits.RF2){ //detect button press
-            go = 1; }        
+
+    while (1) {
+        
+//        color = ReadHSV();
+//        __delay_ms(500);
+//        sendUnsignedIntSerial4(ClassifyColor(color));
+//        sendUnsignedIntSerial4(color.H);
+//        sendUnsignedIntSerial4(color.S);
+        
+        if (!PORTFbits.RF2) {  // Detect button press
+            go = 1; 
+        }        
+
         if (go) {
             setGoLED();
             fullSpeedAhead(&motorL, &motorR);
-        
-            if ((color_read_Clear() < 30)){
+
+            if (color_read_Clear() < 30) {  // Detect white or other colors
                 wallAlign(&motorL, &motorR); 
                 color = ReadHSV();
+                char command = ClassifyColor(color);
                 
-                CommandBuggy(&motorL, &motorR, ClassifyColor(color));
+                // Execute the command
+                CommandBuggy(&motorL, &motorR, command);
+                
+                if (command == 5) {  // White detected
+                    if (!isEmpty(&commandStack)) {
+                        //turn on all LEDs
+                        setCalibrationLED();
+                        // Move forward for 2 seconds
+                        fullSpeedAhead(&motorL, &motorR);
+                        __delay_ms(2000);
 
+                        // Execute the last command in reverse
+                        char lastCommand = pop(&commandStack);
+                        CommandBuggy(&motorL, &motorR, lastCommand);
+                        stop(&motorL, &motorR);
+                    } else {
+                        // Stop if no commands left to retrace
+                        go = 0;
+                        turnOffLEDs();
+                        break;
+                    }
+                } else {
+                    // Push the flipped command onto the stack
+                    push(&commandStack, flipCommand(command));
+
+                }
             }
-        }              
+        }
     }
 }

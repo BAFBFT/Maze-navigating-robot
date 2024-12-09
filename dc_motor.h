@@ -5,8 +5,8 @@
 
 #define _XTAL_FREQ 64000000
 
-# define turnTimeleft 250// values determined from calibration 
-# define turnTimeright 250
+# define turnTimeleft 350// values determined from calibration 
+# define turnTimeright 350
 # define reverseTime 600
 # define turnTimeLeft135 650 // values determined from calibration 
 # define turnTimeRight135 600
@@ -30,6 +30,7 @@ void initBuggyLights(void);
 void initButtons(void);
 void setGoLED(void);
 void setCalibrationLED(void);
+void turnOffLEDs(void);
 void setMotorPWM(DC_motor *m);
 void stop(DC_motor *mL, DC_motor *mR);
 void turnLeft(DC_motor *mL, DC_motor *mR);

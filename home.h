@@ -20,7 +20,7 @@ void initialiseStack(Stack *timeStack, Stack *commandStack);
 char isEmpty(Stack *stack);
 char isFull(Stack *stack);
 void push(Stack *stack, int value);
-char flipColor(char color);
+char flipCommand(char color);
 int pop(Stack *stack);
 
 #endif
