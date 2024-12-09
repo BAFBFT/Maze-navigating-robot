@@ -28,6 +28,8 @@ void motorStruct(DC_motor *motorL, DC_motor *motorR);
 void initDCmotorsPWM(int PWMperiod); // function to setup PWM
 void initBuggyLights(void);
 void initButtons(void);
+void setGoLED(void);
+void setCalibrationLED(void);
 void setMotorPWM(DC_motor *m);
 void stop(DC_motor *mL, DC_motor *mR);
 void turnLeft(DC_motor *mL, DC_motor *mR);

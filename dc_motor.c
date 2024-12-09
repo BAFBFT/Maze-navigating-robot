@@ -96,6 +96,17 @@ void initButtons(void)
     TRISFbits.TRISF3 = 1;
     ANSELFbits.ANSELF3 = 0;
 }
+
+//function to turn on go LED
+void setGoLED(void){
+    LATDbits.LATD7 = 1;
+}
+
+//function to turn on calibration LED
+void setCalibrationLED(void){
+    LATHbits.LATH3 = 1;
+}
+
 // function to set CCP PWM output from the values in the motor structure
 void setMotorPWM(DC_motor *m)
 {
@@ -279,6 +290,8 @@ void wallAlign(DC_motor *mL, DC_motor *mR){
         __delay_ms(150);
         j++;
     }
+    // ensure motor stops
+    stop(mL, mR); 
 }
 
 //Function to command motors based on color

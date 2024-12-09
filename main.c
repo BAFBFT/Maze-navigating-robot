@@ -16,13 +16,13 @@
 #include "serial.h"
 #include "dc_motor.h"
 #include "interrupt.h"
+#include "home.h"
 
 
 
 void main(void) {   
-//    Interrupts_init();
-    //clear_interrupt_init();
-    
+    Interrupts_init();
+
 // Declare motor structs
     DC_motor motorL, motorR;
     motorStruct(&motorL, &motorR);
@@ -31,31 +31,23 @@ void main(void) {
     initButtons();   
     color_click_init();
     initUSART4();
-
+// Declare HSV struct
+    HSV color;
+ // Declare timeStack and commandStack structs
+    Stack timeStack, commandStack;
+    initialiseStack(&timeStack, &commandStack);
+    
     char go = 0;
-    while(1){
-//        RGBC color_1 = MeasureRGBC();
-//        HSV color = ReadHSV();
-//        __delay_ms(200);
-//        
-//       sendUnsignedIntSerial4(ClassifyColor(color));
-//        sendUnsignedIntSerial4(color_1.G);
-//        sendUnsignedIntSerial4(color_1.B);
-//        sendUnsignedIntSerial4(color_1.C);
-//        __delay_ms(500);
-//        sendUnsignedIntSerial4(color_read_Clear());
-        
+    while(1){      
         if (!PORTFbits.RF2){ //detect button press
             go = 1; }        
         if (go) {
-            LATDbits.LATD7=1;
+            setGoLED();
             fullSpeedAhead(&motorL, &motorR);
         
             if ((color_read_Clear() < 30)){
-                wallAlign(&motorL, &motorR);
-                stop(&motorL, &motorR);  
-                HSV color = ReadHSV();
-                
+                wallAlign(&motorL, &motorR); 
+                color = ReadHSV();
                 
                 CommandBuggy(&motorL, &motorR, ClassifyColor(color));
 
