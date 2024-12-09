@@ -96,6 +96,23 @@ void initButtons(void)
     TRISFbits.TRISF3 = 1;
     ANSELFbits.ANSELF3 = 0;
 }
+
+//function to turn on go LED
+void setGoLED(void){
+    LATDbits.LATD7 = 1;
+}
+
+//function to turn on calibration LED
+void setCalibrationLED(void){
+    LATHbits.LATH3 = 1;
+}
+
+// function to turn off LEDs
+void turnOffLEDs(void) {
+    LATHbits.LATH3 = 0;
+    LATDbits.LATD7 = 0;
+}
+
 // function to set CCP PWM output from the values in the motor structure
 void setMotorPWM(DC_motor *m)
 {
@@ -279,6 +296,23 @@ void wallAlign(DC_motor *mL, DC_motor *mR){
         __delay_ms(150);
         j++;
     }
+    // ensure motor stops
+    stop(mL, mR); 
+}
+
+//function to test turn calibration
+void calibrationRoutine(DC_motor *mL, DC_motor *mR){
+    turnLeft(mL, mR);
+    __delay_ms(500);
+    turnRight(mL, mR);
+    __delay_ms(500);
+    turnLeft135(mL, mR);
+    __delay_ms(500);
+    turnRight135(mL, mR);
+    __delay_ms(500);
+    shortReverse(mL, mR);
+    __delay_ms(500);
+    longReverse(mL, mR);
 }
 
 //Function to command motors based on color
@@ -296,8 +330,12 @@ void CommandBuggy(DC_motor *motorL, DC_motor *motorR, char color) {
         longReverse(motorL, motorR);
         turnLeft(motorL, motorR);
     } else if (color == 5) {
-        longReverse(motorL, motorR);
-        // white, go home
+        shortReverse(motorL, motorR);
+        for (char i = 0; i < 2; i++) {
+            turnLeft(motorL, motorR);
+            __delay_ms(500); // Wait 500 ms between turns
+        }
+        // white, turn 180, go home
     } else if (color == 6) {
         shortReverse(motorL, motorR);
         turnLeft135(motorL, motorR);

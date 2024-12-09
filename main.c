@@ -16,50 +16,97 @@
 #include "serial.h"
 #include "dc_motor.h"
 #include "interrupt.h"
+#include "home.h"
 
 
 
-void main(void) {   
-//    Interrupts_init();
-    //clear_interrupt_init();
-    
-// Declare motor structs
+void main(void) {
+    Interrupts_init();
+
+    // Declare motor structs
     DC_motor motorL, motorR;
     motorStruct(&motorL, &motorR);
-//Other initialisations    
+
+    // Other initializations    
     initBuggyLights();
     initButtons();   
     color_click_init();
     initUSART4();
 
-    char go = 0;
-    while(1){
-//        RGBC color_1 = MeasureRGBC();
-//        HSV color = ReadHSV();
-//        __delay_ms(200);
-//        
-//       sendUnsignedIntSerial4(ClassifyColor(color));
-//        sendUnsignedIntSerial4(color_1.G);
-//        sendUnsignedIntSerial4(color_1.B);
-//        sendUnsignedIntSerial4(color_1.C);
-//        __delay_ms(500);
-//        sendUnsignedIntSerial4(color_read_Clear());
-        
-        if (!PORTFbits.RF2){ //detect button press
-            go = 1; }        
-        if (go) {
-            LATDbits.LATD7=1;
-            fullSpeedAhead(&motorL, &motorR);
-        
-            if ((color_read_Clear() < 30)){
-                wallAlign(&motorL, &motorR);
-                stop(&motorL, &motorR);  
-                HSV color = ReadHSV();
-                
-                
-                CommandBuggy(&motorL, &motorR, ClassifyColor(color));
+    // Declare HSV struct
+    HSV color;
 
+    // Declare timeStack and commandStack structs
+    Stack timeStack, commandStack;
+    initialiseStack(&timeStack, &commandStack);
+
+    char go = 0;
+    char calibrate = 0;
+
+    while (1) {
+        
+//        color = ReadHSV();
+//        __delay_ms(500);
+//        sendUnsignedIntSerial4(ClassifyColor(color));
+//        sendUnsignedIntSerial4(color.H);
+//        sendUnsignedIntSerial4(color.S);
+        
+        // Turn calibration routine
+        if (!PORTFbits.RF3) {  // Detect button press
+            calibrate = 1; 
+        }     
+        
+        if (calibrate) {
+            setCalibrationLED();
+            calibrationRoutine(&motorL, &motorR);
+            turnOffLEDs();
+            calibrate = 0;
+        }
+        
+        // Maze solving routine
+        if (!PORTFbits.RF2) {  // Detect button press
+            go = 1; 
+        }        
+
+        if (go) {
+            setGoLED();
+            fullSpeedAhead(&motorL, &motorR);
+
+            if (color_read_Clear() < 30) {  // Detect white or other colors
+                wallAlign(&motorL, &motorR); 
+                color = ReadHSV();
+                char command = ClassifyColor(color);
+                
+                // Execute the command
+                CommandBuggy(&motorL, &motorR, command);
+                
+                if (command == 5) {  // White detected
+                    //turn on all LEDs
+                    setCalibrationLED();
+                    while (!isEmpty(&commandStack)) {            
+                        // Move forward for 2 seconds
+                        fullSpeedAhead(&motorL, &motorR);
+                        __delay_ms(2000);
+                        stop(&motorL, &motorR);
+                        
+                        // Execute the last command in reverse
+                        char lastCommand = pop(&commandStack);
+                        CommandBuggy(&motorL, &motorR, lastCommand);
+                        stop(&motorL, &motorR);
+                    }
+                        // Move forward and stop if no commands left to retrace
+                        fullSpeedAhead(&motorL, &motorR);
+                        __delay_ms(2000);
+                        stop(&motorL, &motorR);
+                        go = 0;
+                        turnOffLEDs();
+                        break;
+                } else {
+                    // Push the flipped command onto the stack
+                    push(&commandStack, flipCommand(command));
+
+                }
             }
-        }              
+        }
     }
 }
