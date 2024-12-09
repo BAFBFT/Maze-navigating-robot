@@ -45,19 +45,19 @@ void push(Stack *stack, int value) {
 // Function to flip the color command for return home
 char flipCommand(char color){
     
-    if (color == 1) {
+    if (color == 1) { // Right <==> Left
         return 7;
-    } else if (color == 2) {
+    } else if (color == 2) { // Right135 <==> Left135
         return 6;
-    } else if (color == 3) {
+    } else if (color == 3) { // Reverse-Right <==> Reverse-Left
         return 4;
-    } else if (color == 4) {
+    } else if (color == 4) { // Reverse-Left <==> Reverse-Right
         return 3;
-    }  else if (color == 6) {
+    }  else if (color == 6) { // Left135  <==> Right135
         return 2;
-    } else if (color == 7) {
+    } else if (color == 7) { // Left <==> Right
         return 1;
-    } else if (color == 8) {
+    } else if (color == 8) { // Turn 180
         return 8;
     }
 }

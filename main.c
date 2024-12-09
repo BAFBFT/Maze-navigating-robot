@@ -41,6 +41,7 @@ void main(void) {
     initialiseStack(&timeStack, &commandStack);
 
     char go = 0;
+    char calibrate = 0;
 
     while (1) {
         
@@ -50,6 +51,19 @@ void main(void) {
 //        sendUnsignedIntSerial4(color.H);
 //        sendUnsignedIntSerial4(color.S);
         
+        // Turn calibration routine
+        if (!PORTFbits.RF3) {  // Detect button press
+            calibrate = 1; 
+        }     
+        
+        if (calibrate) {
+            setCalibrationLED();
+            calibrationRoutine(&motorL, &motorR);
+            turnOffLEDs();
+            calibrate = 0;
+        }
+        
+        // Maze solving routine
         if (!PORTFbits.RF2) {  // Detect button press
             go = 1; 
         }        
@@ -80,7 +94,10 @@ void main(void) {
                         CommandBuggy(&motorL, &motorR, lastCommand);
                         stop(&motorL, &motorR);
                     }
-                        // Stop if no commands left to retrace
+                        // Move forward and stop if no commands left to retrace
+                        fullSpeedAhead(&motorL, &motorR);
+                        __delay_ms(2000);
+                        stop(&motorL, &motorR);
                         go = 0;
                         turnOffLEDs();
                         break;

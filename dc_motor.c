@@ -300,6 +300,21 @@ void wallAlign(DC_motor *mL, DC_motor *mR){
     stop(mL, mR); 
 }
 
+//function to test turn calibration
+void calibrationRoutine(DC_motor *mL, DC_motor *mR){
+    turnLeft(mL, mR);
+    __delay_ms(500);
+    turnRight(mL, mR);
+    __delay_ms(500);
+    turnLeft135(mL, mR);
+    __delay_ms(500);
+    turnRight135(mL, mR);
+    __delay_ms(500);
+    shortReverse(mL, mR);
+    __delay_ms(500);
+    longReverse(mL, mR);
+}
+
 //Function to command motors based on color
 void CommandBuggy(DC_motor *motorL, DC_motor *motorR, char color) {
     if (color == 1) {
