@@ -67,23 +67,23 @@ void main(void) {
                 CommandBuggy(&motorL, &motorR, command);
                 
                 if (command == 5) {  // White detected
-                    if (!isEmpty(&commandStack)) {
-                        //turn on all LEDs
-                        setCalibrationLED();
+                    //turn on all LEDs
+                    setCalibrationLED();
+                    while (!isEmpty(&commandStack)) {            
                         // Move forward for 2 seconds
                         fullSpeedAhead(&motorL, &motorR);
                         __delay_ms(2000);
-
+                        stop(&motorL, &motorR);
+                        
                         // Execute the last command in reverse
                         char lastCommand = pop(&commandStack);
                         CommandBuggy(&motorL, &motorR, lastCommand);
                         stop(&motorL, &motorR);
-                    } else {
+                    }
                         // Stop if no commands left to retrace
                         go = 0;
                         turnOffLEDs();
                         break;
-                    }
                 } else {
                     // Push the flipped command onto the stack
                     push(&commandStack, flipCommand(command));
