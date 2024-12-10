@@ -209,9 +209,21 @@ void turnRight(DC_motor *mL, DC_motor *mR)
 //function to make the robot go straight
 void fullSpeedAhead(DC_motor *mL, DC_motor *mR)
 {
-    mL->power=30; //set Left wheel to go 50%
+    mL->power=35; //set Left wheel to go 50%
     mL->direction=1; //set Left wheel direction to forward
-    mR->power=30; //set Right wheel to go 50%
+    mR->power=35; //set Right wheel to go 50%
+    mR->direction=1; //set Right wheel direction to forward
+    
+    setMotorPWM(mL); //send to controller
+    setMotorPWM(mR);
+}
+
+//function to make the robot go straight slower
+void align(DC_motor *mL, DC_motor *mR)
+{
+    mL->power=25; //set Left wheel to go 50%
+    mL->direction=1; //set Left wheel direction to forward
+    mR->power=25; //set Right wheel to go 50%
     mR->direction=1; //set Right wheel direction to forward
     
     setMotorPWM(mL); //send to controller
@@ -231,7 +243,7 @@ void shortReverse(DC_motor *mL, DC_motor *mR)
     setMotorPWM(mL); //send to controller
     setMotorPWM(mR);
     
-    __delay_ms(250);
+    __delay_ms(200);
     stop(mL, mR); //then stop
     __delay_ms(100);
 }
@@ -290,12 +302,8 @@ void turnRight135(DC_motor *mL, DC_motor *mR)
 
 // function to make the robot realign with the wall
 void wallAlign(DC_motor *mL, DC_motor *mR){
-    char j = 0;
-    while (j < 5) {
-        fullSpeedAhead(mL, mR);
-        __delay_ms(150);
-        j++;
-    }
+    align(mL, mR);
+    __delay_ms(2000);
     // ensure motor stops
     stop(mL, mR); 
 }
@@ -349,7 +357,12 @@ void CommandBuggy(DC_motor *motorL, DC_motor *motorR, char color) {
             __delay_ms(500); // Wait 500 ms between turns
         }
     } else {
-        // Default action if no valid color classification
-        stop(motorL, motorR); // Define stopMotors to halt both motors
+        // Default action if LOST
+        shortReverse(motorL, motorR);
+        for (char i = 0; i < 2; i++) {
+            turnLeft(motorL, motorR);
+            __delay_ms(500); // Wait 500 ms between turns
+        }
     }
 }
+

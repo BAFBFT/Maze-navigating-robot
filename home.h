@@ -2,6 +2,7 @@
 #define _home_H
 
 #include <xc.h>
+#include "dc_motor.h"
 
 #define _XTAL_FREQ 64000000 //note intrinsic _delay function is 62.5ns at 64,000,000Hz  
 #define _I2C_CLOCK 100000 //100kHz for I2C
@@ -22,5 +23,5 @@ char isFull(Stack *stack);
 void push(Stack *stack, int value);
 char flipCommand(char color);
 int pop(Stack *stack);
-
+void goHome(DC_motor *mL, DC_motor *mR, Stack *timeStack, Stack *commandStack);
 #endif

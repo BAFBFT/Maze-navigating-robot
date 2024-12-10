@@ -123,7 +123,7 @@ void turn_off_LED(void)
 
 
 HSV ReadHSV(void) {
-    const double SCALE_FACTOR = 100.0;
+    const char SCALE_FACTOR = 100.0;
     
     // Measure Red Channel
     double totalR = 0.0;
@@ -163,7 +163,7 @@ HSV ReadHSV(void) {
     }
     double avgC = totalC / 10.0;
 
-    // Normalize RGB values using Clear channel and scale
+    // Normalise RGB values using Clear channel and scale
     double R = (avgC > 0) ? (avgR / avgC) * SCALE_FACTOR : 0;
     double G = (avgC > 0) ? (avgG / avgC) * SCALE_FACTOR : 0;
     double B = (avgC > 0) ? (avgB / avgC) * SCALE_FACTOR : 0;
@@ -205,9 +205,9 @@ char ClassifyColor(HSV hsv) {
     double S_H_ratio = (hsv.H != 0) ? ((double)hsv.S * 1000) / hsv.H : 0;
 
     // Color classification using if-else statements with continuous thresholds
-    if (S_H_ratio > 19000) {
+    if (S_H_ratio > 15000) {
         return 1; //RED
-    } else if (S_H_ratio > 9000 && S_H_ratio <= 19000) {
+    } else if (S_H_ratio > 9000 && S_H_ratio <= 15000) {
         return 2; // ORANGE
     } else if (S_H_ratio > 2900 && S_H_ratio <= 9000 && hsv.S > 85) { // Saturation to handle overlap with PINK
         return 3; //YELLOW
