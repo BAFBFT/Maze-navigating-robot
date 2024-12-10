@@ -1,4 +1,3 @@
-
  // CONFIG1L
 #pragma config FEXTOSC = HS     // External Oscillator mode Selection bits (HS (crystal oscillator) above 8 MHz; PFM set to high power)
 #pragma config RSTOSC = EXTOSC_4PLL// Power-up default value for COSC bits (EXTOSC with 4x PLL, with EXTOSC operating per FEXTOSC bits)
@@ -17,11 +16,12 @@
 #include "dc_motor.h"
 #include "interrupt.h"
 #include "home.h"
-
+#include "timers.h"
 
 
 void main(void) {
     Interrupts_init();
+    Timer0_interrupt_init();
 
     // Declare motor structs
     DC_motor motorL, motorR;
@@ -42,15 +42,9 @@ void main(void) {
 
     char go = 0;
     char calibrate = 0;
+    extern volatile unsigned int overflowCount; // Global declaration
 
     while (1) {
-        
-//        color = ReadHSV();
-//        __delay_ms(500);
-//        sendUnsignedIntSerial4(ClassifyColor(color));
-//        sendUnsignedIntSerial4(color.H);
-//        sendUnsignedIntSerial4(color.S);
-        
         // Turn calibration routine
         if (!PORTFbits.RF3) {  // Detect button press
             calibrate = 1; 
@@ -65,46 +59,57 @@ void main(void) {
         
         // Maze solving routine
         if (!PORTFbits.RF2) {  // Detect button press
-            go = 1; 
+            go = 1;
+            Timer0_init();
+            overflowCount = 0;
         }        
 
         if (go) {
             setGoLED();
             fullSpeedAhead(&motorL, &motorR);
+            
+            // read ambient light level and set threshold for obstacle 
+            // might need to add condition depending on light level, it sometimes interrupts too soon
+            // i.e. if the light condition is > this change the percentage needed for measurement routine
+            unsigned int clearVal = color_read_Clear();
+            unsigned int clearThreshold = (93 * clearVal) / 100;
 
-            if (color_read_Clear() < 30) {  // Detect white or other colors
+            if (color_read_Clear() < clearThreshold) {  // Detect obstacle
+                // stop motors
+//                sendStringSerial4("Current overflowcount:");
+//                sendUnsignedIntSerial4(overflowCount);
+                stop(&motorL, &motorR);
+                
+                // Record the time spent moving forward (overflowCount * 0.25 seconds)
+//                sendStringSerial4("Current overflowCount: ");
+//                sendUnsignedIntSerial4(overflowCount);
+                push(&timeStack, overflowCount);
+                
+                
+                //align and read color
+                turnOffLEDs();
                 wallAlign(&motorL, &motorR); 
                 color = ReadHSV();
                 char command = ClassifyColor(color);
+
                 
                 // Execute the command
                 CommandBuggy(&motorL, &motorR, command);
                 
-                if (command == 5) {  // White detected
-                    //turn on all LEDs
-                    setCalibrationLED();
-                    while (!isEmpty(&commandStack)) {            
-                        // Move forward for 2 seconds
-                        fullSpeedAhead(&motorL, &motorR);
-                        __delay_ms(2000);
-                        stop(&motorL, &motorR);
-                        
-                        // Execute the last command in reverse
-                        char lastCommand = pop(&commandStack);
-                        CommandBuggy(&motorL, &motorR, lastCommand);
-                        stop(&motorL, &motorR);
-                    }
-                        // Move forward and stop if no commands left to retrace
-                        fullSpeedAhead(&motorL, &motorR);
-                        __delay_ms(2000);
-                        stop(&motorL, &motorR);
-                        go = 0;
-                        turnOffLEDs();
-                        break;
+                // Reset overflow count for the next forward movement
+                overflowCount = 0; 
+                
+                if (command == WHITE || command == LOST){  // White detected (or lost), go home
+                    goHome(&motorL, &motorR, &timeStack, &commandStack);
+                    
+                    // Stop motors, arrived home
+                    go = 0;
+                    stop(&motorL, &motorR);
+                    turnOffLEDs();
+                    break;
                 } else {
                     // Push the flipped command onto the stack
-                    push(&commandStack, flipCommand(command));
-
+                    push(&commandStack, flipCommand(command)); 
                 }
             }
         }

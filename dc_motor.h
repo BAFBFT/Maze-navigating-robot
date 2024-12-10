@@ -5,8 +5,8 @@
 
 #define _XTAL_FREQ 64000000
 
-# define turnTimeleft 350// values determined from calibration 
-# define turnTimeright 350
+# define turnTimeleft 400// values determined from calibration 
+# define turnTimeright 380
 # define reverseTime 600
 # define turnTimeLeft135 500 // values determined from calibration 
 # define turnTimeRight135 550
@@ -36,6 +36,7 @@ void stop(DC_motor *mL, DC_motor *mR);
 void turnLeft(DC_motor *mL, DC_motor *mR);
 void turnRight(DC_motor *mL, DC_motor *mR);
 void fullSpeedAhead(DC_motor *mL, DC_motor *mR);
+void align(DC_motor *mL, DC_motor *mR);
 void shortReverse(DC_motor *mL, DC_motor *mR);
 void longReverse(DC_motor *mL, DC_motor *mR);
 void turnLeft135(DC_motor *mL, DC_motor *mR);
