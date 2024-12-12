@@ -167,7 +167,7 @@ Instead of separate functions for each channel you may want to create a structur
 
 This concludes the basics of I2C and communication with the colour sensor. Best of luck! 
 ## Addressing Point 1
-The ambient lighting is recorded when button RF2 is pressed, and the ambient lighting is also remeasured after the buggy has performed in order to have an accurate value of the ambient lighting in the direction it is headed towards. A threshold is also calculated based on the value of the ambient lighting and once this threshold is reached the buggy stops and begins it color reading sequence.
+The ambient lighting is recorded when button RF2 is pressed, and the ambient lighting is also remeasured after the buggy has performed in order to have an accurate value of the ambient lighting in the direction it is headed towards. A threshold is also calculated based on the value of the ambient lighting and once this threshold is reached the buggy stops and begins it color reading sequence, in the given example the threshold is set for 93% of ambient lighting.
 
 	unsigned int clearVal = color_read_Clear();
 	unsigned int clearThreshold = (93 * clearVal) / 100;
@@ -175,3 +175,5 @@ The ambient lighting is recorded when button RF2 is pressed, and the ambient lig
 	if (color_read_Clear() < clearThreshold) {  // Detect obstacle
 	// stop motors
 	stop(&motorL, &motorR);
+## Addressing Point 2
+![Addressing Point 2](gifs/RGBtoHSV.png)
