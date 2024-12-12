@@ -7,8 +7,8 @@
 #define _XTAL_FREQ 64000000 //note intrinsic _delay function is 62.5ns at 64,000,000Hz  
 
 #define SCALE 1024  // Scaling factor to preserve precision
-#define WHITE 5
-#define LOST 0
+#define WHITE 5 // Command value for white
+#define LOST 0 // Command value for unclassified colors
  
 
 /********************************************//**
@@ -42,36 +42,50 @@ unsigned int color_read_Blue(void);
 unsigned int color_read_Green(void);
 
 /********************************************//**
- *  Function to read the red channel
+ *  Reads the clear (ambient light) channel intensity
  *	Returns a 16 bit ADC value representing colour intensity
  ***********************************************/
 unsigned int color_read_Clear(void);
-/************************************************
 
- 
- ************************************************/
-
-
-unsigned int read_color(void);
-
+/***********************************************
+ *  Flashes the red LED 
+ ***********************************************/
 void flash_red(void);
+
+/***********************************************
+ *  Flashes the green LED 
+ ***********************************************/
 void flash_green(void);
+
+/***********************************************
+ *  Flashes the blue LED 
+ ***********************************************/
 void flash_blue(void);
+
+/***********************************************
+ *  Turns off all LED indicators
+ ***********************************************/
 void turn_off_LED(void);
 
-typedef struct RGBC{
-    float R; // Red
-    float G; // Green
-    float B; // Blue
-    float C; // Clear
-} RGBC;
-
-typedef struct HSV{
+/***********************************************
+ *  Structure representing HSV color values
+ ***********************************************/
+typedef struct HSV {
     unsigned int H; // Hue
     unsigned int S; // Saturation
     unsigned int V; // Value
 } HSV;
 
+/***********************************************
+ *  Reads HSV color values from the color sensor
+ *  @return HSV structure containing Hue, Saturation, and Value
+ ***********************************************/
 HSV ReadHSV(void);
+
+/***********************************************
+ *  Classifies a given HSV value into a color category
+ *  @param hsv HSV structure containing color data
+ *  @return Encoded color category
+ ***********************************************/
 char ClassifyColor(HSV hsv);
 #endif
