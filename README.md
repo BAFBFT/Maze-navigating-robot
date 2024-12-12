@@ -167,9 +167,9 @@ Instead of separate functions for each channel you may want to create a structur
 
 This concludes the basics of I2C and communication with the colour sensor. Best of luck! 
 ## Addressing Point 1
-To accurately measure ambient lighting, the buggy records the initial light level when button RF2 is pressed. After completing its maneuver, the buggy re-measures the ambient light in its current direction to ensure an up-to-date value.
+To accurately measure ambient lighting, the buggy records the initial light level when button RF2 is pressed. Additionaly , after completing every maneuver, the buggy re-measures the ambient light in its current direction to ensure an up-to-date value.
 
-A threshold is then calculated based on this ambient light reading. When the light intensity exceeds 93% of this threshold, the buggy halts and initiates its color reading sequence.
+A threshold is then calculated based on this ambient light reading. When the light intensity exceeds 93% of this threshold (this value can be changed depending on lighting conditions), the buggy halts and initiates its color reading sequence.
 
 	unsigned int clearVal = color_read_Clear();
 	unsigned int clearThreshold = (93 * clearVal) / 100;
