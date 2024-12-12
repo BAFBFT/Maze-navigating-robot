@@ -286,12 +286,14 @@ The buggy receives instructions based on the color detected by the CommandBuggy 
 	}
  
  The turning times need to be calibrated depending on the friction of the floor where the buggy is being run, this is done by setting the delay for defined turn times in dc_motor.h:
+ 
 	# define turnTimeleft 500// values determined from calibration 
 	# define turnTimeright 420
 	# define reverseTime 2700
 	# define turnTimeLeft135 500
 	# define turnTimeRight135 550
 	# define turnTime180 1300
+ 
 ## Addressing Point 4
 To enable the buggy to remember its past actions, two stacks are used: one to record the flipped commands (the opposite of the commands executed in maze-solving mode) and the other to track the time spent moving forward. The stack data structure is employed because it follows a "last in, first out" (LIFO) principle, allowing the buggy to effectively retain memory of its actions.
 <p align="center">
