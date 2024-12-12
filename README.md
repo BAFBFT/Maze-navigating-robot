@@ -167,7 +167,9 @@ Instead of separate functions for each channel you may want to create a structur
 
 This concludes the basics of I2C and communication with the colour sensor. Best of luck! 
 ## Addressing Point 1
-The ambient lighting is recorded when button RF2 is pressed, and the ambient lighting is also remeasured after the buggy has performed in order to have an accurate value of the ambient lighting in the direction it is headed towards. A threshold is also calculated based on the value of the ambient lighting and once this threshold is reached the buggy stops and begins it color reading sequence, in the given example the threshold is set for 93% of ambient lighting.
+To accurately measure ambient lighting, the buggy records the initial light level when button RF2 is pressed. After completing its maneuver, the buggy re-measures the ambient light in its current direction to ensure an up-to-date value.
+
+A threshold is then calculated based on this ambient light reading. When the light intensity exceeds 93% of this threshold, the buggy halts and initiates its color reading sequence.
 
 	unsigned int clearVal = color_read_Clear();
 	unsigned int clearThreshold = (93 * clearVal) / 100;
@@ -175,8 +177,55 @@ The ambient lighting is recorded when button RF2 is pressed, and the ambient lig
 	if (color_read_Clear() < clearThreshold) {  // Detect obstacle
 	// stop motors
 	stop(&motorL, &motorR);
+
+To align the buggy with the wall precisely, it moves forward at a reduced speed. This slow, controlled movement allows the buggy to position itself flush against the wall, improving the consistency of color readings and correcting any minor path deviations from previous turns. 
 ## Addressing Point 2
-To read 
+To read the color card the Tricolor LED are flashed in RGB sequence and the corresponding channels are read, the clear channel is also read for normalising the RGB values. 10 readings are taken from each channel and averaged to ensure the normalised RGB values are consistent, An example is shown for reading the red channel. Double data types are used in order to keep the precision of the values before they are further processed.
+
+    // Measure Red Channel
+    double totalR = 0.0;
+    for (char i = 0; i < 10; i++) {
+        flash_red();
+        __delay_ms(50);
+        totalR += (double)color_read_Red();
+    }
+These normalised RGB values are then converted to the HSV space in the function ReadHSV() in color.c and the HSV values are stored in a HSV struct for further computation:
+  
+  // Normalise RGB values using Clear channel and scale
+    double R = (avgC > 0) ? (avgR / avgC) * SCALE_FACTOR : 0;
+    double G = (avgC > 0) ? (avgG / avgC) * SCALE_FACTOR : 0;
+    double B = (avgC > 0) ? (avgB / avgC) * SCALE_FACTOR : 0;
+
+    double max = fmax(fmax(R, G), B);
+    double min = fmin(fmin(R, G), B);
+    double delta = max - min;
+
+    HSV hsv;
+
+    // Calculate Hue (H)
+    if (delta == 0) {
+        hsv.H = 0;
+    } else if (max == R) {
+        hsv.H = (int)(60.0 * fmod(((G - B) / delta), 6.0));
+    } else if (max == G) {
+        hsv.H = (int)(60.0 * (((B - R) / delta) + 2.0));
+    } else {
+        hsv.H = (int)(60.0 * (((R - G) / delta) + 4.0));
+    }
+
+    if (hsv.H < 0) {
+        hsv.H += 360;
+    }
+
+    // Calculate Saturation (S)
+    hsv.S = (max == 0) ? 0 : (int)((delta / max) * 100.0);
+
+    // Calculate Value (V)
+    hsv.V = (int)((max / SCALE_FACTOR) * 100.0);
+
+    return hsv;
+    
+ After extensive data collection and tests, it was discovered that converting these normalised RGB values to the HSV space and computing the ratio of Saturation/Hue provided a good separation for thresholding classification, although some colors did overlap especially the pale ones e.g. Yellow, Pink, White and Light Blue    
 <p align="center">
   <img src="gifs/RGBtoHSV.png" width="600" height="400">
 </p>
