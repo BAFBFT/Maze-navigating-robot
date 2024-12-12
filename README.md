@@ -236,45 +236,50 @@ Through rigorous data collection and testing, it was found that calculating the 
 
 ## Addressing Point 3
 
-	//Function to command motors based on color
-	void CommandBuggy(DC_motor *motorL, DC_motor *motorR, char color) {
-	    if (color == 1) {
-	        shortReverse(motorL, motorR);
-	        turnRight(motorL, motorR);
-	    } else if (color == 2) {
-	        shortReverse(motorL, motorR);
-	        turnRight135(motorL, motorR);
-	    } else if (color == 3) {
-	        longReverse(motorL, motorR);
-	        turnRight(motorL, motorR);
-	    } else if (color == 4) {
-	        longReverse(motorL, motorR);
-	        turnLeft(motorL, motorR);
-	    } else if (color == 5) {
-	        shortReverse(motorL, motorR);
-	        for (char i = 0; i < 2; i++) {
-	            turnLeft(motorL, motorR);
-	            __delay_ms(500); // Wait 500 ms between turns
+	// Function to command motors based on color and mode
+	void CommandBuggy(DC_motor *mL, DC_motor *mR, char color , char mode) {
+	    if (color == 1) { // RED, turn right
+	        shortReverse(mL, mR);
+	        turnRight(mL, mR);
+	    } else if (color == 2) { // ORANGE, turn right 135
+	        shortReverse(mL, mR);
+	        turnRight135(mL, mR);
+	    } else if (color == 3) { // YELLOW, reverse 1 square and turn right
+	        if (mode == 1) {
+	        longReverse(mL, mR);
+	        turnRight(mL, mR);
+	        }  else {
+	            turnRight(mL, mR);
+	            fullSpeedAhead(mL, mR);
+	            __delay_ms(reverseTime);
+	            stop(mL, mR);
 	        }
-	        // white, turn 180, go home
-	    } else if (color == 6) {
-	        shortReverse(motorL, motorR);
-	        turnLeft135(motorL, motorR);
-	    } else if (color == 7) {
-	        shortReverse(motorL, motorR);
-	        turnLeft(motorL, motorR);
-	    } else if (color == 8) {
-	        shortReverse(motorL, motorR);
-	        for (char i = 0; i < 2; i++) {
-	            turnLeft(motorL, motorR);
-	            __delay_ms(500); // Wait 500 ms between turns
+	    } else if (color == 4) { // PINK, reverse 1 square and turn left 
+	        if (mode == 1) {
+	        longReverse(mL, mR);
+	        turnLeft(mL, mR);
+	        }  else {
+	            turnLeft(mL, mR);
+	            fullSpeedAhead(mL, mR);
+	            __delay_ms(reverseTime);
+	            stop(mL, mR);
 	        }
+	    } else if (color == 5) { // WHITE, turn 180 then go home
+	        shortReverse(mL, mR);
+	        turn180(mL, mR);
+	    } else if (color == 6) { // LIGHT BLUE, turn left 135
+	        shortReverse(mL, mR);
+	        turnLeft135(mL, mR);
+	    } else if (color == 7) { // GREEN, turn left
+	        shortReverse(mL, mR);
+	        turnLeft(mL, mR);
+	    } else if (color == 8) { // BLUE, turn 180
+	        shortReverse(mL, mR);
+	        turn180(mL, mR);
 	    } else {
 	        // Default action if LOST
-	        shortReverse(motorL, motorR);
-	        for (char i = 0; i < 2; i++) {
-	            turnLeft(motorL, motorR);
-	            __delay_ms(500); // Wait 500 ms between turns
-	        }
+	        // Lost, turn 180 and go home
+	        shortReverse(mL, mR);
+	        turn180(mL, mR);       
 	    }
 	}
