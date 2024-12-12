@@ -297,4 +297,40 @@ To enable the buggy to remember its past actions, two stacks are used: one to re
 <p align="center">
   <img src="gifs/Stack.png" width="1000" height="500">
 </p>
-In main.c once the color read is white (or lost) the function goHome
+In main.c once the color read is white (or lost) the function goHome(), located in home.c, is called and the buggy will turn 180 and return to its starting position:
+
+	void goHome(DC_motor *mL, DC_motor *mR, Stack *timeStack, Stack *commandStack) {
+	    // Check if timeStack is empty
+	     while (!isEmpty(timeStack)){
+	
+	        setGoLED();
+	        setCalibrationLED();
+	
+	        int lastTime = pop(timeStack);
+
+	        if (lastTime > 0) { // Ensure lastTime is valid
+	            setGoLED();
+	            fullSpeedAhead(mL, mR);
+	
+	            // Reset overflowCount and wait for the equivalent time
+	            overflowCount = 0;
+	            while (overflowCount < lastTime) {
+	                sendUnsignedIntSerial4(overflowCount);
+	                // Wait until the timer has counted the required duration
+	            }
+	
+	            stop(mL, mR);
+	            turnOffLEDs();
+	        }
+	
+	        if (!isEmpty(commandStack)) {
+	            char lastCommand = pop(commandStack);
+	            CommandBuggy(mL, mR, lastCommand);
+	        }
+	    }
+	
+	    stop(mL, mR);
+	    turnOffLEDs();
+	    return;
+	}
+Accurate timing is maintained using the Timer 0 module, where a predefined value is loaded into the TMR0L and TMR0H registers to trigger an interrupt every 10 ms. When the interrupt occurs, the global variable overflowCount is incremented. If the buggy detects an obstacle, the current value of overflowCount is pushed onto the time stack. This ensures precise timing for each forward stretch.
