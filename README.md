@@ -233,6 +233,7 @@ Through rigorous data collection and testing, it was found that calculating the 
 <p align="center">
   <img src="gifs/Color classify.png" width="1000" height="500">
 </p>
+
 ## Addressing Point 3
 
 	//Function to command motors based on color
