@@ -166,6 +166,14 @@ Instead of separate functions for each channel you may want to create a structur
 	};
 
 This concludes the basics of I2C and communication with the colour sensor. Best of luck! 
+
+## Demo
+
+A video of the buggy solving a maze is provided.
+
+https://github.com/user-attachments/assets/5d4b0d59-9a30-4f14-992d-d6a7459a622b
+
+
 ## Addressing Point 1
 To accurately measure ambient lighting, the buggy records the initial light level when button RF2 is pressed. Additionaly , after completing every maneuver, the buggy re-measures the ambient light in its current direction to ensure an up-to-date value.
 
