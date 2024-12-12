@@ -176,6 +176,7 @@ The ambient lighting is recorded when button RF2 is pressed, and the ambient lig
 	// stop motors
 	stop(&motorL, &motorR);
 ## Addressing Point 2
+To read 
 <p align="center">
-  <img src="gifs/RGBtoHSV.png" width="800" height="500">
+  <img src="gifs/RGBtoHSV.png" width="600" height="400">
 </p>
