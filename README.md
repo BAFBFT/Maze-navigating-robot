@@ -187,6 +187,13 @@ A threshold is then calculated based on this ambient light reading. When the lig
 	stop(&motorL, &motorR);
 
 To align the buggy with the wall precisely, it moves forward at a reduced speed. This slow, controlled movement allows the buggy to position itself flush against the wall, improving the consistency of color readings and correcting any minor path deviations from previous turns. 
+
+	 //align and read color
+		turnOffLEDs();
+		wallAlign(&motorL, &motorR); 
+		color = ReadHSV();
+		char command = ClassifyColor(color);
+	
 ## Addressing Point 2
 To read the color card the Tricolor LED are flashed in RGB sequence and the corresponding channels are read, the clear channel is also read for normalising the RGB values. 10 readings are taken from each channel and averaged to ensure the normalised RGB values are consistent, An example is shown for reading the red channel. Double data types are used in order to keep the precision of the values before they are further processed.
 
