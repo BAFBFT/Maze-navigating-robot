@@ -176,9 +176,9 @@ void stop(DC_motor *mL, DC_motor *mR)
 void turnLeft(DC_motor *mL, DC_motor *mR)
 {
     LATFbits.LATF0 = 1; //signal left
-    mL->power=50; //set Left wheel to go 50%
+    mL->power=30; //set Left wheel to go 50%
     mL->direction=0; //set Left wheel direction to reverse
-    mR->power=50; //set Right wheel to go 50%
+    mR->power=30; //set Right wheel to go 50%
     mR->direction=1; //set Right wheel direction to forward
     
     setMotorPWM(mL); //send to controller
@@ -193,25 +193,45 @@ void turnLeft(DC_motor *mL, DC_motor *mR)
 void turnRight(DC_motor *mL, DC_motor *mR)
 {
     LATEbits.LATE5 = 1; //signal right
-    mL->power=50; //set Left wheel to go 50%
+    mL->power=30; //set Left wheel to go 50%
     mL->direction=1; //set Left wheel direction to forward
-    mR->power=50; //set Right wheel to go 50%
+    mR->power=30; //set Right wheel to go 50%
     mR->direction=0; //set Right wheel direction to reverse
     
     setMotorPWM(mL); //send to controller
+    __delay_ms(250);
     setMotorPWM(mR);
     
     __delay_ms(turnTimeright); //allow time to turn
     stop(mL, mR); //then stop
+    __delay_ms(250);
     LATEbits.LATE5 = 0; //stop signalling
 }
 
+//function to make the robot turn right 
+void turn180(DC_motor *mL, DC_motor *mR)
+{
+    LATEbits.LATE5 = 1; //signal right
+    mL->power=30; //set Left wheel to go 50%
+    mL->direction=1; //set Left wheel direction to forward
+    mR->power=30; //set Right wheel to go 50%
+    mR->direction=0; //set Right wheel direction to reverse
+    
+    setMotorPWM(mL); //send to controller
+    __delay_ms(250);
+    setMotorPWM(mR);
+    
+    __delay_ms(turnTime180); //allow time to turn
+    stop(mL, mR); //then stop
+    __delay_ms(250);
+    LATEbits.LATE5 = 0; //stop signalling
+}
 //function to make the robot go straight
 void fullSpeedAhead(DC_motor *mL, DC_motor *mR)
 {
-    mL->power=35; //set Left wheel to go 50%
+    mL->power=30; //set Left wheel to go 50%
     mL->direction=1; //set Left wheel direction to forward
-    mR->power=35; //set Right wheel to go 50%
+    mR->power=30; //set Right wheel to go 50%
     mR->direction=1; //set Right wheel direction to forward
     
     setMotorPWM(mL); //send to controller
@@ -233,17 +253,17 @@ void align(DC_motor *mL, DC_motor *mR)
 //function to make the robot go a short distance in reverse
 void shortReverse(DC_motor *mL, DC_motor *mR)
 {
-    mL->power= 50; //set Left wheel to go power set in .h
+    mL->power= 25; //set Left wheel to go power set in .h
     mL->direction= 0; //set Left wheel direction to forward
     mL->brakemode = 1; //cause breaking effect
-    mR->power= 50; //set Right wheel to go power set in .h
+    mR->power= 25; //set Right wheel to go power set in .h
     mR->direction= 0; //set Left wheel direction to forward
     mR->brakemode = 1; //cause breaking effect
     
     setMotorPWM(mL); //send to controller
     setMotorPWM(mR);
     
-    __delay_ms(200);
+    __delay_ms(850);
     stop(mL, mR); //then stop
     __delay_ms(100);
 }
@@ -251,10 +271,10 @@ void shortReverse(DC_motor *mL, DC_motor *mR)
 //function to make the robot go 1 box in reverse
 void longReverse(DC_motor *mL, DC_motor *mR)
 {
-    mL->power= 50; //set Left wheel to go power set in .h
+    mL->power= 30; //set Left wheel to go power set in .h
     mL->direction= 0; //set Left wheel direction to forward
     mL->brakemode = 1; //cause breaking effect
-    mR->power= 50; //set Right wheel to go power set in .h
+    mR->power= 30; //set Right wheel to go power set in .h
     mR->direction= 0; //set Left wheel direction to forward
     mR->brakemode = 1; //cause breaking effect
     
@@ -270,9 +290,9 @@ void longReverse(DC_motor *mL, DC_motor *mR)
 void turnLeft135(DC_motor *mL, DC_motor *mR)
 {
     LATEbits.LATE5 = 1; //signal right
-    mL->power=50; //set Left wheel to go 50%
+    mL->power=30; //set Left wheel to go 50%
     mL->direction=0; //set Left wheel direction to forward
-    mR->power=50; //set Right wheel to go 50%
+    mR->power=30; //set Right wheel to go 50%
     mR->direction=1; //set Right wheel direction to reverse
     
     setMotorPWM(mL); //send to controller
@@ -280,6 +300,7 @@ void turnLeft135(DC_motor *mL, DC_motor *mR)
     
     __delay_ms(turnTimeLeft135); //allow time to turn
     stop(mL, mR); //then stop
+    __delay_ms(250);
     LATEbits.LATE5 = 0; //stop signalling
 }
 
@@ -287,9 +308,9 @@ void turnLeft135(DC_motor *mL, DC_motor *mR)
 void turnRight135(DC_motor *mL, DC_motor *mR)
 {
     LATEbits.LATE5 = 1; //signal right
-    mL->power=50; //set Left wheel to go 50%
+    mL->power=30; //set Left wheel to go 50%
     mL->direction=1; //set Left wheel direction to forward
-    mR->power=50; //set Right wheel to go 50%
+    mR->power=30; //set Right wheel to go 50%
     mR->direction=0; //set Right wheel direction to reverse
     
     setMotorPWM(mL); //send to controller
@@ -297,6 +318,7 @@ void turnRight135(DC_motor *mL, DC_motor *mR)
     
     __delay_ms(turnTimeRight135); //allow time to turn
     stop(mL, mR); //then stop
+    __delay_ms(250);
     LATEbits.LATE5 = 0; //stop signalling
 }
 
@@ -308,7 +330,7 @@ void wallAlign(DC_motor *mL, DC_motor *mR){
     stop(mL, mR); 
 }
 
-//function to test turn calibration
+//function to test turn calibrations
 void calibrationRoutine(DC_motor *mL, DC_motor *mR){
     turnLeft(mL, mR);
     __delay_ms(500);
@@ -318,51 +340,58 @@ void calibrationRoutine(DC_motor *mL, DC_motor *mR){
     __delay_ms(500);
     turnRight135(mL, mR);
     __delay_ms(500);
+    turn180(mL, mR);
+    __delay_ms(500);
     shortReverse(mL, mR);
     __delay_ms(500);
     longReverse(mL, mR);
 }
 
-//Function to command motors based on color
-void CommandBuggy(DC_motor *motorL, DC_motor *motorR, char color) {
-    if (color == 1) {
-        shortReverse(motorL, motorR);
-        turnRight(motorL, motorR);
-    } else if (color == 2) {
-        shortReverse(motorL, motorR);
-        turnRight135(motorL, motorR);
-    } else if (color == 3) {
-        longReverse(motorL, motorR);
-        turnRight(motorL, motorR);
-    } else if (color == 4) {
-        longReverse(motorL, motorR);
-        turnLeft(motorL, motorR);
-    } else if (color == 5) {
-        shortReverse(motorL, motorR);
-        for (char i = 0; i < 2; i++) {
-            turnLeft(motorL, motorR);
-            __delay_ms(500); // Wait 500 ms between turns
+// Function to command motors based on color and mode
+void CommandBuggy(DC_motor *mL, DC_motor *mR, char color , char mode) {
+    if (color == 1) { // RED, turn right
+        shortReverse(mL, mR);
+        turnRight(mL, mR);
+    } else if (color == 2) { // ORANGE, turn right 135
+        shortReverse(mL, mR);
+        turnRight135(mL, mR);
+    } else if (color == 3) { // YELLOW, reverse 1 square and turn right
+        if (mode == 1) {
+        longReverse(mL, mR);
+        turnRight(mL, mR);
+        }  else {
+            turnRight(mL, mR);
+            fullSpeedAhead(mL, mR);
+            __delay_ms(reverseTime);
+            stop(mL, mR);
         }
-        // white, turn 180, go home
-    } else if (color == 6) {
-        shortReverse(motorL, motorR);
-        turnLeft135(motorL, motorR);
-    } else if (color == 7) {
-        shortReverse(motorL, motorR);
-        turnLeft(motorL, motorR);
-    } else if (color == 8) {
-        shortReverse(motorL, motorR);
-        for (char i = 0; i < 2; i++) {
-            turnLeft(motorL, motorR);
-            __delay_ms(500); // Wait 500 ms between turns
+    } else if (color == 4) { // PINK, reverse 1 square and turn left 
+        if (mode == 1) {
+        longReverse(mL, mR);
+        turnLeft(mL, mR);
+        }  else {
+            turnLeft(mL, mR);
+            fullSpeedAhead(mL, mR);
+            __delay_ms(reverseTime);
+            stop(mL, mR);
         }
+    } else if (color == 5) { // WHITE, turn 180 then go home
+        shortReverse(mL, mR);
+        turn180(mL, mR);
+    } else if (color == 6) { // LIGHT BLUE, turn left 135
+        shortReverse(mL, mR);
+        turnLeft135(mL, mR);
+    } else if (color == 7) { // GREEN, turn left
+        shortReverse(mL, mR);
+        turnLeft(mL, mR);
+    } else if (color == 8) { // BLUE, turn 180
+        shortReverse(mL, mR);
+        turn180(mL, mR);
     } else {
         // Default action if LOST
-        shortReverse(motorL, motorR);
-        for (char i = 0; i < 2; i++) {
-            turnLeft(motorL, motorR);
-            __delay_ms(500); // Wait 500 ms between turns
-        }
+        // Lost, turn 180 and go home
+        shortReverse(mL, mR);
+        turn180(mL, mR);       
     }
 }
 
