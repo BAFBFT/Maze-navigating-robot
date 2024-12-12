@@ -3,10 +3,6 @@
 #include "i2c.h"
 #include "serial.h"
 
-/************************************
- * Function to turn on interrupts and set if priority is used
- * Note you also need to enable peripheral interrupts in the INTCON register to use CM1IE.
-************************************/
 void Interrupts_init(void)
 {
 	// turn on global interrupts, peripheral interrupts and the interrupt source 
@@ -34,10 +30,9 @@ void __interrupt(high_priority) HighISR_timer()
         PIR0bits.TMR0IF = 0;             // Clear the interrupt flag
         
         overflowCount++;
-        //sendUnsignedIntSerial4(overflowCount);  // Debug print
         
         // Reload the timer to maintain accurate timing
-        TMR0H = 0x0B;                    // High byte of 0xF0C4
-        TMR0L = 0xDC;                    // Low byte of 0xF0C4
+        TMR0H = 0xFC;                    // High byte of 0xFC17
+        TMR0L = 0x17;                    // Low byte of 0xFC17
     }    
 }

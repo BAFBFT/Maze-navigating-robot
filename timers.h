@@ -5,7 +5,11 @@
 
 #define _XTAL_FREQ 64000000
 
+/************************************
+ * Initializes Timer0 for operation.
+ * Configures the timer registers, prescaler, and preload values 
+ * to ensure precise timing.
+************************************/
 void Timer0_init(void);
-unsigned int get16bitTMR0val(void);
 
 #endif

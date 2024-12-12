@@ -45,6 +45,22 @@ void push(Stack *stack, int value) {
     stack->arr[++stack->top] = value;
 }
 
+// Function to pop an element from the stack
+int pop(Stack *stack) {
+
+    // Check for stack underflow
+    if (isEmpty(stack) == 1) {
+        return -1;
+    }
+    
+    // Return the top element 
+    int popped = stack->arr[stack->top];
+    // decrement top pointer
+    stack->top--;
+    // return the popped element
+    return popped;
+}
+
 // Function to flip the color command for return home
 char flipCommand(char color){
     
@@ -65,54 +81,40 @@ char flipCommand(char color){
     }
 }
 
-// Function to pop an element from the stack
-int pop(Stack *stack) {
-
-    // Check for stack underflow
-    if (isEmpty(stack) == 1) {
-        return -1;
-    }
-    
-    // Return the top element 
-    int popped = stack->arr[stack->top];
-    // decrement top pointer
-    stack->top--;
-    // return the popped element
-    return popped;
-}
-
+// Function to return the buggy to its starting position
 void goHome(DC_motor *mL, DC_motor *mR, Stack *timeStack, Stack *commandStack) {
-    // Check if timeStack is empty
-     while (!isEmpty(timeStack)){
-
+    // Process all movements stored in the time stack
+    while (!isEmpty(timeStack)) {
+        // Indicate active operation with LEDs
         setGoLED();
         setCalibrationLED();
 
+        // Retrieve the last recorded time from the stack
         int lastTime = pop(timeStack);
-        sendStringSerial4("To pop: ");
-        sendUnsignedIntSerial4(lastTime);
-        if (lastTime > 0) { // Ensure lastTime is valid
+        if (lastTime > 0) { // Proceed only if the time value is valid
             setGoLED();
             fullSpeedAhead(mL, mR);
 
-            // Reset overflowCount and wait for the equivalent time
+            // Wait for the duration of the last recorded movement
             overflowCount = 0;
-            while (overflowCount < lastTime) {
-                sendUnsignedIntSerial4(overflowCount);
-                // Wait until the timer has counted the required duration
-            }
+            while (overflowCount < lastTime);
 
+            // Align with the wall and stop
+            wallAlign(mL, mR);
             stop(mL, mR);
+            __delay_ms(500);
             turnOffLEDs();
         }
 
+        // Process the last recorded command, if available
         if (!isEmpty(commandStack)) {
             char lastCommand = pop(commandStack);
-            CommandBuggy(mL, mR, lastCommand);
+            CommandBuggy(mL, mR, lastCommand, 0);
         }
     }
 
+    // Stop the buggy and turn off LEDs upon completion
     stop(mL, mR);
     turnOffLEDs();
-    return;
 }
+

@@ -8,9 +8,26 @@
 #define RX_BUF_SIZE 20
 #define TX_BUF_SIZE 60
 
-//basic EUSART funcitons
+/***********************************************
+ *  Initializes the EUSART4 module
+ ***********************************************/
 void initUSART4(void);
+
+/***********************************************
+ *  Sends a single character over EUSART4
+ *  @param charToSend The character to be sent
+ ***********************************************/
 void sendCharSerial4(char charToSend);
+
+/***********************************************
+ *  Sends a null-terminated string over EUSART4
+ *  @param string Pointer to the string to send
+ ***********************************************/
 void sendStringSerial4(char *string);
+
+/***********************************************
+ *  Sends an unsigned integer as ASCII characters over EUSART4
+ *  @param value The unsigned integer to send
+ ***********************************************/
 void sendUnsignedIntSerial4(unsigned int value);
 #endif
