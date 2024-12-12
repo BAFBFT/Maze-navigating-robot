@@ -231,5 +231,5 @@ The normalised RGB values are converted to HSV color space in the ReadHSV() func
     
 Through rigorous data collection and testing, it was found that calculating the ratio of Saturation/Hue provided a robust method for threshold-based color classification. However, some pale colors, such as Yellow, Pink, White, and Light Blue, presented challenges due to overlapping ranges. To mitigate this issue, additional conditions based on hue and saturation values were introduced, effectively separating these colors. A flow chart of the process is shown:   
 <p align="center">
-  <img src="gifs/Color classify.png" width="600" height="350">
+  <img src="gifs/Color classify.png" width="1000" height="500">
 </p>
