@@ -191,6 +191,9 @@ To read the color card the Tricolor LED are flashed in RGB sequence and the corr
     }
 
 These normalised RGB values are then converted to the HSV space in the function ReadHSV() in color.c and the HSV values are stored in a HSV struct for further computation.
+<p align="center">
+  <img src="gifs/RGBtoHSV.png" width="600" height="350">
+</p>
 
 	// Normalise RGB values using Clear channel and scale
 	double R = (avgC > 0) ? (avgR / avgC) * SCALE_FACTOR : 0;
@@ -227,6 +230,4 @@ These normalised RGB values are then converted to the HSV space in the function 
 	return hsv;
     
  After extensive data collection and tests, it was discovered that converting these normalised RGB values to the HSV space and computing the ratio of Saturation/Hue provided a good separation for thresholding classification, although some colors did overlap especially the pale ones e.g. Yellow, Pink, White and Light Blue    
-<p align="center">
-  <img src="gifs/RGBtoHSV.png" width="600" height="350">
-</p>
+
