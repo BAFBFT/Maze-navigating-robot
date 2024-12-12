@@ -189,6 +189,7 @@ To read the color card the Tricolor LED are flashed in RGB sequence and the corr
         __delay_ms(50);
         totalR += (double)color_read_Red();
     }
+
 These normalised RGB values are then converted to the HSV space in the function ReadHSV() in color.c and the HSV values are stored in a HSV struct for further computation.
 
   // Normalise RGB values using Clear channel and scale
