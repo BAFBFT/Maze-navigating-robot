@@ -44,72 +44,69 @@ void main(void) {
     char calibrate = 0;
     extern volatile unsigned int overflowCount; // Global declaration
 
+//        __delay_ms(500);
+//        HSV color = ReadHSV();
+//        sendUnsignedIntSerial4(ClassifyColor(color));
+    
+    
     while (1) {
-        // Turn calibration routine
-        if (!PORTFbits.RF3) {  // Detect button press
+        // Calibration Routine
+        if (!PORTFbits.RF3) { // Detect button press for calibration
             calibrate = 1; 
-        }     
-        
+        }
+
         if (calibrate) {
-            setCalibrationLED();
-            calibrationRoutine(&motorL, &motorR);
-            turnOffLEDs();
+            turnRight135(&motorL, &motorR);
+//            setCalibrationLED();
+//            calibrationRoutine(&motorL, &motorR);
+//            turnOffLEDs();
             calibrate = 0;
         }
-        
-        // Maze solving routine
-        if (!PORTFbits.RF2) {  // Detect button press
+
+        // Maze Solving Routine
+        if (!PORTFbits.RF2) { // Detect button press to start maze solving
             go = 1;
             Timer0_init();
             overflowCount = 0;
-        }        
+        }
 
         if (go) {
             setGoLED();
             fullSpeedAhead(&motorL, &motorR);
-            
-            // read ambient light level and set threshold for obstacle 
-            // might need to add condition depending on light level, it sometimes interrupts too soon
-            // i.e. if the light condition is > this change the percentage needed for measurement routine
-            unsigned int clearVal = color_read_Clear();
-            unsigned int clearThreshold = (93 * clearVal) / 100;
 
-            if (color_read_Clear() < clearThreshold) {  // Detect obstacle
-                // stop motors
-//                sendStringSerial4("Current overflowcount:");
-//                sendUnsignedIntSerial4(overflowCount);
-                stop(&motorL, &motorR);
-                
-                // Record the time spent moving forward (overflowCount * 0.25 seconds)
-//                sendStringSerial4("Current overflowCount: ");
-//                sendUnsignedIntSerial4(overflowCount);
+            // Read ambient light level and set threshold for obstacle detection
+            unsigned int clearVal = color_read_Clear();
+            unsigned int clearThreshold = (90 * clearVal) / 100;
+
+            if (color_read_Clear() < clearThreshold) { // Obstacle Detected
+                stop(&motorL, &motorR); // Stop motors
+
+                // Record the time spent moving forward
                 push(&timeStack, overflowCount);
-                
-                
-                //align and read color
+
+                // Align with wall and read color
                 turnOffLEDs();
-                wallAlign(&motorL, &motorR); 
-                color = ReadHSV();
+                wallAlign(&motorL, &motorR);
+                HSV color = ReadHSV();
                 char command = ClassifyColor(color);
 
-                
                 // Execute the command
-                CommandBuggy(&motorL, &motorR, command);
-                
+                CommandBuggy(&motorL, &motorR, command, 1);
+
                 // Reset overflow count for the next forward movement
-                overflowCount = 0; 
-                
-                if (command == WHITE || command == LOST){  // White detected (or lost), go home
+                overflowCount = 0;
+
+                if (command == WHITE || command == LOST) { // If white or lost, return home
                     goHome(&motorL, &motorR, &timeStack, &commandStack);
-                    
+
                     // Stop motors, arrived home
                     go = 0;
                     stop(&motorL, &motorR);
                     turnOffLEDs();
                     break;
                 } else {
-                    // Push the flipped command onto the stack
-                    push(&commandStack, flipCommand(command)); 
+                    // Push the flipped command onto the commandStack for the return home
+                    push(&commandStack, flipCommand(command));
                 }
             }
         }

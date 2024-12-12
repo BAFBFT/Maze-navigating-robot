@@ -7,10 +7,10 @@
 
 # define turnTimeleft 500// values determined from calibration 
 # define turnTimeright 420
-# define reverseTime 2700
-# define turnTimeLeft135 500 // values determined from calibration 
-# define turnTimeRight135 550
-# define turnTime180 1300 //ideal is 900
+# define reverseTime 2500
+# define turnTimeLeft135 750 // values determined from calibration 
+# define turnTimeRight135 700
+# define turnTime180 900 //ideal is 900
 
 
 typedef struct DC_motor { //definition of DC_motor structure

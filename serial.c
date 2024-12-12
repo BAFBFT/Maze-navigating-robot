@@ -34,6 +34,7 @@ void sendStringSerial4(char *string){
     } 	
 }
 
+//function to send an integer as a string over the serial interface
 void sendUnsignedIntSerial4(unsigned int value) {
     char buffer[7];  // Buffer to hold the string representation (max 5 digits + null terminator)
     sprintf(buffer, "%u", value);  // Convert unsigned int to decimal string

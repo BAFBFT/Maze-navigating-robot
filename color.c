@@ -201,15 +201,15 @@ HSV ReadHSV(void) {
 
 char ClassifyColor(HSV hsv) {
     
-    // Calculate S/H ratio, scaling S by 1000
+    // Calculate S/H ratio using ternary operator, scaling S by 1000 to avoid numerical losses
     double S_H_ratio = (hsv.H != 0) ? ((double)hsv.S * 1000) / hsv.H : 0;
 
     // Color classification using if-else statements with continuous thresholds
     if (S_H_ratio > 15000) {
         return 1; //RED
-    } else if (S_H_ratio > 9000 && S_H_ratio <= 15000) {
+    } else if (S_H_ratio > 8000 && S_H_ratio <= 15000) {
         return 2; // ORANGE
-    } else if (S_H_ratio > 2900 && S_H_ratio <= 9000 && hsv.S > 85) { // Saturation to handle overlap with PINK
+    } else if (S_H_ratio > 2900 && S_H_ratio <= 8000 && hsv.S > 85) { // Saturation to handle overlap with PINK
         return 3; //YELLOW
     } else if (S_H_ratio > 900 && S_H_ratio <= 3200) {
         // Nested if statement for PINK, WHITE, and LIGHT BLUE 
