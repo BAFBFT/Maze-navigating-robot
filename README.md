@@ -235,7 +235,7 @@ Through rigorous data collection and testing, it was found that calculating the 
 </p>
 
 ## Addressing Point 3
-
+The buggy is given instructions based on the color that is read with the CommandBuggy function in dc_motor.c:
 	// Function to command motors based on color and mode
 	void CommandBuggy(DC_motor *mL, DC_motor *mR, char color , char mode) {
 	    if (color == 1) { // RED, turn right
@@ -283,3 +283,11 @@ Through rigorous data collection and testing, it was found that calculating the 
 	        turn180(mL, mR);       
 	    }
 	}
+ The turns need to be calibrated depending on the friction of the floor where the buggy is being run, this is done by setting the delay for the turn times in dc_motor.h:
+
+	# define turnTimeleft 500// values determined from calibration 
+	# define turnTimeright 420
+	# define reverseTime 2700
+	# define turnTimeLeft135 500
+	# define turnTimeRight135 550
+	# define turnTime180 1300
