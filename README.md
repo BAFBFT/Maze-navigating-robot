@@ -234,6 +234,38 @@ Through rigorous data collection and testing, it was found that calculating the 
   <img src="gifs/Color classify.png" width="1000" height="500">
 </p>
 
+ClassifyColor() function (in color.c): 
+
+	char ClassifyColor(HSV hsv) {
+	    
+	    // Calculate S/H ratio using ternary operator, scaling S by 1000 to avoid numerical losses
+	    double S_H_ratio = (hsv.H != 0) ? ((double)hsv.S * 1000) / hsv.H : 0;
+	
+	    // Color classification using if-else statements with continuous thresholds
+	    if (S_H_ratio > 15000) {
+	        return 1; //RED
+	    } else if (S_H_ratio > 8000 && S_H_ratio <= 15000) {
+	        return 2; // ORANGE
+	    } else if (S_H_ratio > 2900 && S_H_ratio <= 8000 && hsv.S > 85) { // Saturation to handle overlap with PINK
+	        return 3; //YELLOW
+	    } else if (S_H_ratio > 900 && S_H_ratio <= 3200) {
+	        // Nested if statement for PINK, WHITE, and LIGHT BLUE 
+	        if (hsv.H < 35) {
+	            return 4; // PINK
+	        } else if (hsv.H >= 35 && hsv.H <= 45) {
+	            return 5; // WHITE
+	        } else {
+	            return 6; //LIGHT BLUE
+	        }
+	    } else if (S_H_ratio > 800 && S_H_ratio <= 900) {
+	        return 7; // GREEN
+	    } else if (S_H_ratio <= 800) {
+	        return 8; // BLUE
+	    } else {
+	        return 0; // LOST (unrecognised color)
+	    }
+	}
+ 
 ## Addressing Point 3
 The buggy receives instructions based on the color detected by the CommandBuggy function in dc_motor.c. The mode parameter distinguishes between maze-solving mode and returning home mode (1 for maze solving, 0 for returning home). In returning home mode, longer reverse movements associated with the Yellow and Pink colors are adjusted to forward movements:
 
@@ -338,3 +370,4 @@ In main.c once the color read is white (or lost) the function goHome(), located 
 Accurate timing is maintained using the Timer 0 module, where a predefined value is loaded into the TMR0L and TMR0H registers to trigger an interrupt every 10 ms. When the interrupt occurs, the global variable overflowCount (declared in interrupt.h) is incremented. If the buggy detects an obstacle, the current value of overflowCount is pushed onto the time stack. This ensures precise timing for each forward stretch.
 
 ## Addressing Point 5
+The color black, representing maze walls, does not fall within any thresholds for color reading. As a result, the ClassifyColor() function returns 0 when the buggy is misaligned and detects the color of a maze wall. In this case, the same action as for the white color is executed: the buggy performs a 180-degree turn and returns home.
