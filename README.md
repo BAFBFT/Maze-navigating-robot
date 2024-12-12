@@ -167,7 +167,7 @@ Instead of separate functions for each channel you may want to create a structur
 
 This concludes the basics of I2C and communication with the colour sensor. Best of luck! 
 
-## Demo
+## Demo Video
 
 A video of the buggy solving a maze is provided.
 
