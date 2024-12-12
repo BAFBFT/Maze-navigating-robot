@@ -236,6 +236,7 @@ Through rigorous data collection and testing, it was found that calculating the 
 
 ## Addressing Point 3
 The buggy is given instructions based on the color that is read with the CommandBuggy function in dc_motor.c:
+
 	// Function to command motors based on color and mode
 	void CommandBuggy(DC_motor *mL, DC_motor *mR, char color , char mode) {
 	    if (color == 1) { // RED, turn right
