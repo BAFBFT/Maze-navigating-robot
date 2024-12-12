@@ -192,39 +192,39 @@ To read the color card the Tricolor LED are flashed in RGB sequence and the corr
 
 These normalised RGB values are then converted to the HSV space in the function ReadHSV() in color.c and the HSV values are stored in a HSV struct for further computation.
 
-  // Normalise RGB values using Clear channel and scale
-    double R = (avgC > 0) ? (avgR / avgC) * SCALE_FACTOR : 0;
-    double G = (avgC > 0) ? (avgG / avgC) * SCALE_FACTOR : 0;
-    double B = (avgC > 0) ? (avgB / avgC) * SCALE_FACTOR : 0;
-
-    double max = fmax(fmax(R, G), B);
-    double min = fmin(fmin(R, G), B);
-    double delta = max - min;
-
-    HSV hsv;
-
-    // Calculate Hue (H)
-    if (delta == 0) {
-        hsv.H = 0;
-    } else if (max == R) {
-        hsv.H = (int)(60.0 * fmod(((G - B) / delta), 6.0));
-    } else if (max == G) {
-        hsv.H = (int)(60.0 * (((B - R) / delta) + 2.0));
-    } else {
-        hsv.H = (int)(60.0 * (((R - G) / delta) + 4.0));
-    }
-
-    if (hsv.H < 0) {
-        hsv.H += 360;
-    }
-
-    // Calculate Saturation (S)
-    hsv.S = (max == 0) ? 0 : (int)((delta / max) * 100.0);
-
-    // Calculate Value (V)
-    hsv.V = (int)((max / SCALE_FACTOR) * 100.0);
-
-    return hsv;
+	// Normalise RGB values using Clear channel and scale
+	double R = (avgC > 0) ? (avgR / avgC) * SCALE_FACTOR : 0;
+	double G = (avgC > 0) ? (avgG / avgC) * SCALE_FACTOR : 0;
+	double B = (avgC > 0) ? (avgB / avgC) * SCALE_FACTOR : 0;
+	
+	double max = fmax(fmax(R, G), B);
+	double min = fmin(fmin(R, G), B);
+	double delta = max - min;
+	
+	HSV hsv;
+	
+	// Calculate Hue (H)
+	if (delta == 0) {
+	    hsv.H = 0;
+	} else if (max == R) {
+	    hsv.H = (int)(60.0 * fmod(((G - B) / delta), 6.0));
+	} else if (max == G) {
+	    hsv.H = (int)(60.0 * (((B - R) / delta) + 2.0));
+	} else {
+	    hsv.H = (int)(60.0 * (((R - G) / delta) + 4.0));
+	}
+	
+	if (hsv.H < 0) {
+	    hsv.H += 360;
+	}
+	
+	// Calculate Saturation (S)
+	hsv.S = (max == 0) ? 0 : (int)((delta / max) * 100.0);
+	
+	// Calculate Value (V)
+	hsv.V = (int)((max / SCALE_FACTOR) * 100.0);
+	
+	return hsv;
     
  After extensive data collection and tests, it was discovered that converting these normalised RGB values to the HSV space and computing the ratio of Saturation/Hue provided a good separation for thresholding classification, although some colors did overlap especially the pale ones e.g. Yellow, Pink, White and Light Blue    
 <p align="center">
