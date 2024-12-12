@@ -228,5 +228,5 @@ These normalised RGB values are then converted to the HSV space in the function 
     
  After extensive data collection and tests, it was discovered that converting these normalised RGB values to the HSV space and computing the ratio of Saturation/Hue provided a good separation for thresholding classification, although some colors did overlap especially the pale ones e.g. Yellow, Pink, White and Light Blue    
 <p align="center">
-  <img src="gifs/RGBtoHSV.png" width="600" height="400">
+  <img src="gifs/RGBtoHSV.png" width="600" height="500">
 </p>
