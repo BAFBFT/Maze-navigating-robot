@@ -295,7 +295,7 @@ The buggy receives instructions based on the color detected by the CommandBuggy 
 ## Addressing Point 4
 To enable the buggy to remember its past actions, two stacks are used: one to record the flipped commands (the opposite of the commands executed in maze-solving mode) and the other to track the time spent moving forward. The stack data structure is employed because it follows a "last in, first out" (LIFO) principle, allowing the buggy to effectively retain memory of its actions.
 <p align="center">
-  <img src="gifs/Stack.png" width="800" height="350">
+  <img src="gifs/Stack.png" width="700" height="350">
 </p>
 In main.c once the color read is white (or lost) the function goHome(), located in home.c, is called and the buggy will turn 180 and return to its starting position:
 
@@ -334,4 +334,5 @@ In main.c once the color read is white (or lost) the function goHome(), located 
 	    return;
 	}
 Accurate timing is maintained using the Timer 0 module, where a predefined value is loaded into the TMR0L and TMR0H registers to trigger an interrupt every 10 ms. When the interrupt occurs, the global variable overflowCount (declared in interrupt.h) is incremented. If the buggy detects an obstacle, the current value of overflowCount is pushed onto the time stack. This ensures precise timing for each forward stretch.
-## Addressing Point 4
+
+## Addressing Point 5
