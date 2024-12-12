@@ -233,3 +233,46 @@ Through rigorous data collection and testing, it was found that calculating the 
 <p align="center">
   <img src="gifs/Color classify.png" width="1000" height="500">
 </p>
+## Addressing Point 3
+//Function to command motors based on color
+void CommandBuggy(DC_motor *motorL, DC_motor *motorR, char color) {
+    if (color == 1) {
+        shortReverse(motorL, motorR);
+        turnRight(motorL, motorR);
+    } else if (color == 2) {
+        shortReverse(motorL, motorR);
+        turnRight135(motorL, motorR);
+    } else if (color == 3) {
+        longReverse(motorL, motorR);
+        turnRight(motorL, motorR);
+    } else if (color == 4) {
+        longReverse(motorL, motorR);
+        turnLeft(motorL, motorR);
+    } else if (color == 5) {
+        shortReverse(motorL, motorR);
+        for (char i = 0; i < 2; i++) {
+            turnLeft(motorL, motorR);
+            __delay_ms(500); // Wait 500 ms between turns
+        }
+        // white, turn 180, go home
+    } else if (color == 6) {
+        shortReverse(motorL, motorR);
+        turnLeft135(motorL, motorR);
+    } else if (color == 7) {
+        shortReverse(motorL, motorR);
+        turnLeft(motorL, motorR);
+    } else if (color == 8) {
+        shortReverse(motorL, motorR);
+        for (char i = 0; i < 2; i++) {
+            turnLeft(motorL, motorR);
+            __delay_ms(500); // Wait 500 ms between turns
+        }
+    } else {
+        // Default action if LOST
+        shortReverse(motorL, motorR);
+        for (char i = 0; i < 2; i++) {
+            turnLeft(motorL, motorR);
+            __delay_ms(500); // Wait 500 ms between turns
+        }
+    }
+}
