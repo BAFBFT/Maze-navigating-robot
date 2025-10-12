@@ -219,3 +219,5 @@ Accurate timing is maintained using the Timer 0 module, where a predefined value
 
 ## Addressing Point 5
 The color black, representing maze walls, does not fall within any thresholds for color reading. As a result, the ClassifyColor() function returns 0 when the buggy is misaligned and detects the color of a maze wall. In this case, the same action as for the white color is executed: the buggy performs a 180-degree turn and returns home.
+
+# Maze-navigating-robot
