@@ -43,12 +43,7 @@ void main(void) {
     char go = 0;
     char calibrate = 0;
     extern volatile unsigned int overflowCount; // Global declaration
-
-//        __delay_ms(500);
-//        HSV color = ReadHSV();
-//        sendUnsignedIntSerial4(ClassifyColor(color));
-    
-    
+        
     while (1) {
         // Calibration Routine
         if (!PORTFbits.RF3) { // Detect button press for calibration
@@ -57,9 +52,6 @@ void main(void) {
 
         if (calibrate) {
             turnRight135(&motorL, &motorR);
-//            setCalibrationLED();
-//            calibrationRoutine(&motorL, &motorR);
-//            turnOffLEDs();
             calibrate = 0;
         }
 
