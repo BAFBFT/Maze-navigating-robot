@@ -78,17 +78,20 @@ The resulting classifier:
 ## 🧭 Navigation Logic
 
 Each color card corresponds to a specific movement instruction handled by the CommandBuggy() function:
-void CommandBuggy(DC_motor *mL, DC_motor *mR, char color , char mode) {
-    if (color == 1) turnRight(mL, mR);      // RED
-    else if (color == 2) turnRight135(mL, mR); // ORANGE
-    else if (color == 3) longReverse(mL, mR);  // YELLOW
-    else if (color == 4) turnLeft(mL, mR);     // PINK
-    else if (color == 5) turn180(mL, mR);      // WHITE
-    else if (color == 6) turnLeft135(mL, mR);  // LIGHT BLUE
-    else if (color == 7) turnLeft(mL, mR);     // GREEN
-    else if (color == 8) turn180(mL, mR);      // BLUE
-}
+	
+	void CommandBuggy(DC_motor *mL, DC_motor *mR, char color , char mode) {
+	    if (color == 1) turnRight(mL, mR);      // RED
+	    else if (color == 2) turnRight135(mL, mR); // ORANGE
+	    else if (color == 3) longReverse(mL, mR);  // YELLOW
+	    else if (color == 4) turnLeft(mL, mR);     // PINK
+	    else if (color == 5) turn180(mL, mR);      // WHITE
+	    else if (color == 6) turnLeft135(mL, mR);  // LIGHT BLUE
+	    else if (color == 7) turnLeft(mL, mR);     // GREEN
+	    else if (color == 8) turn180(mL, mR);      // BLUE
+	}
+	
 Timing values for each maneuver are calibrated in dc_motor.h depending on surface friction:
+	
 	#define turnTimeLeft 500
 	#define turnTimeRight 420
 	#define reverseTime 2700
