@@ -68,6 +68,21 @@ void flash_blue(void);
 void turn_off_LED(void);
 
 /***********************************************
+ *  Structure representing RGBC color values
+ ***********************************************/
+typedef struct RGB {
+    unsigned int R; // Red
+    unsigned int G; // Green
+    unsigned int B; // Blue
+} RGB;
+
+/***********************************************
+ *  Reads RGBC color values from the sensor
+ *  @return HSV structure containing Hue, Saturation, and Value
+ ***********************************************/
+RGB ReadRGBC(void);
+
+/***********************************************
  *  Structure representing HSV color values
  ***********************************************/
 typedef struct HSV {
@@ -80,7 +95,7 @@ typedef struct HSV {
  *  Reads HSV color values from the color sensor
  *  @return HSV structure containing Hue, Saturation, and Value
  ***********************************************/
-HSV ReadHSV(void);
+HSV ReadHSV(RGB rgb);
 
 /***********************************************
  *  Classifies a given HSV value into a color category
@@ -88,4 +103,9 @@ HSV ReadHSV(void);
  *  @return Encoded color category
  ***********************************************/
 char ClassifyColor(HSV hsv);
+
+/***********************************************
+ *  Predicts color class based on normalized RGB values
+ ***********************************************/
+char predict_color(RGB rgb);
 #endif
